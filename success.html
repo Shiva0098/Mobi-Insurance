@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('background.jpg'); /* Path to your background image */
+        background-size: cover; /* Cover the entire viewport */
+    }
+    
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9); /* Light background with some opacity */
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic; /* Italics for the heading */
+            font-size: 30px; /* Increase font size */
+            color: #333; /* Dark text color */
+        }
+        
+        h2 {
+            font-size: 1.5em; /* Increase font size */
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .customer-details {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .details p {
+            margin: 10px 0; /* Increase margin for better readability */
+            font-size: 1.1em; /* Increase font size */
+        }
+        
+        .details p strong {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Customer Details</h1>
+    <div class="customer-details">
+        <div class="details">
+            <p><strong>First Name:</strong> ${customer[0].Cust_FName}</p>
+            <p><strong>Last Name:</strong> ${customer[0].Cust_LName}</p>
+            <p><strong>Date of Birth:</strong> ${customer[0].Cust_DOB}</p>
+            <p><strong>Gender:</strong> ${customer[0].Cust_Gender}</p>
+            <p><strong>Address:</strong> ${customer[0].Cust_Address}</p>
+            <p><strong>Mobile Number:</strong> ${customer[0].Cust_MOB_Number}</p>
+            <p><strong>Email:</strong> ${customer[0].Cust_Email}</p>
+            <p><strong>Passport Number:</strong> ${customer[0].Cust_Passport_Number}</p>
+            <p><strong>Marital Status:</strong> ${customer[0].Cust_Marital_Status}</p>
+            <p><strong>PPS Number:</strong> ${customer[0].Cust_PPS_Number}</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
