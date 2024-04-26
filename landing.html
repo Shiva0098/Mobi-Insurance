@@ -10,7 +10,8 @@
 
         .main {
             width: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.5) 50%);
+            /* background: linear-gradient(to right, rgba(11, 10, 27, 1) , rgba(18, 18, 60, 0.5) ); */
+            background-image: url('image7.jpg');
             background-position: center;
             background-size: cover;
             height: 100vh;
@@ -284,6 +285,11 @@
             display: flex;
             justify-content: center;
         }
+
+        #login_button{
+            background-color: orange;
+            border-radius: 7px;
+        }
     </style>
 </head>
 <body>
@@ -296,7 +302,7 @@
 
         <div class="menu">
             <ul>
-                <li><a href="#">HOME</a></li>
+                <li><a href="landing.html">HOME</a></li>
                 <li ID="nav_Bar"><a href="custregister.html">SIGN UP</a></li>
                 <li><a href="#">ABOUT</a></li>
                 <li><a href="#">SERVICE</a></li>
@@ -312,7 +318,7 @@
 
     </div>
     <div class="content">
-        <h1>Mobi<br><span>Ensuring safety of you</span> <br>Ensurance</h1>
+        <h1>Mobi<br><span>Ensuring your safety</span> <br>Ensurance</h1>
         <p class="par">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt neque
             expedita atque eveniet <br> quis nesciunt. Quos nulla vero consequuntur, fugit nemo ad delectus
             <br> a quae totam ipsa illum minus laudantium?</p>
@@ -323,15 +329,15 @@
             <form id = "signin">
             <h2>Login Here</h2>
         
-            <label for="Cust_Email">Email:</label>
+            <!-- <label for="Cust_Email">Email:</label> -->
             <input type="email" id="Cust_Email" name="Cust_Email" placeholder="Enter your email address" required>
             <div class="error" id="Cust_Email_error"></div>
         
-            <label for="Cust_Password">Password:</label>
+            <!-- <label for="Cust_Password">Password:</label> -->
             <input type="password" id="Cust_Password" name="Cust_Password" placeholder="Enter your password" required>
             <div class="error" id="Cust_Password_error"></div>
         
-            <input type="submit" value="Login">
+            <input type="submit" id="login_button" value="Login">
         
             <p class="link">Don't have an account? <a href="custregister.html">Sign up here</a></p>
         

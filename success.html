@@ -6,28 +6,32 @@
     <title>Registration Success</title>
     <style>
     body {
+        background-image: url('image7.jpg');
+        background-size: cover; /* Cover the entire viewport */
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-image: url('background.jpg'); /* Path to your background image */
-        background-size: cover; /* Cover the entire viewport */
+      
     }
     
     .container {
         max-width: 600px;
-        margin: 20px auto;
+        margin: 40px auto;
         padding: 20px;
-        background-color: rgba(255, 255, 255, 0.9); /* Light background with some opacity */
+        background-color: orange; /* Light background with some opacity */
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
         
         h1 {
+            font-family: 'Times New Roman', Times, serif;
             text-align: center;
-            margin-bottom: 20px;
-            font-style: italic; /* Italics for the heading */
+            margin-right: 500px;
+            margin-left: 500px;
+            margin-top: 100px;  
+           
             font-size: 30px; /* Increase font size */
-            color: #333; /* Dark text color */
+            color: #ffffff; /* Dark text color */
         }
         
         h2 {
@@ -37,8 +41,9 @@
         }
         
         .customer-details {
-            background-color: #fff;
-            padding: 20px;
+            background-color:rgb(0, 0, 0);
+            padding: 30px;
+            border: 10px black;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -46,17 +51,56 @@
         .details p {
             margin: 10px 0; /* Increase margin for better readability */
             font-size: 1.1em; /* Increase font size */
+            color: white;
         }
         
         .details p strong {
             margin-right: 15px;
         }
+
+        .menu {
+           
+            width: 800px;
+           display: inline;;
+            height: 70px;
+           
+        }
+
+        .up_bar {
+    display: inline-block;
+    padding: 15px 30px;
+    color: #ffffff; /* White text color */
+    font-weight: bold;
+    font-size: 15px; /* Adjust font size */
+    font-family:Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    }
+
+
+    #home_id{
+        
+        margin-left: 500px;
+    }
     </style>
 </head>
 <body>
 
-<div class="container">
+    <div class="menu">
+        <ul>
+            <a href="landing.html" class="up_bar" id="home_id">HOME</a>
+            <a href="custregister.html"class="up_bar">SIGN UP</a>
+            <a href="#"class="up_bar">ABOUT</a>
+            <a href="#"class="up_bar">SERVICE</a>
+            <a href="#"class="up_bar">DESIGN</a>
+            <a href="#"class="up_bar">CONTACT</a>
+        </ul>
+    </div>
+
+
     <h1>Customer Details</h1>
+    
+<div class="container">
+   
     <div class="customer-details">
         <div class="details">
             <p><strong>First Name:</strong> ${customer[0].Cust_FName}</p>
