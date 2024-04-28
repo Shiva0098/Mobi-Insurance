@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="confirm.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Approval</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICES</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>  
+        </div> 
+    </header>
+    <main>
+        <div class="search">
+            <input class="srch" type="search" name="" placeholder="Search Customer">
+            <button class="btn">Search</button>
+        </div>
+    
+        <table class="application-table">
+            <thead>
+                <tr>
+                    <th class="claim-id">Claim Id</th>
+                    <th class="claim">Cust Id </th>
+                    <th class="claim">Incident Id</th>
+                    <th class="claim">Claim Amount</th>
+                    <th class="claim">Date of claim</th>
+                    <th class="claim">Claim Status </th>
+                    <th class="claim-state">State</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="app-id-info">1</td>
+                    <td class="app-info">qwertyuio</td>
+                    <td class="app-info">69</td>
+                    <td class="app-info">$5000</td>
+                    <td class="app-info">20/04/2024</td>
+                    <td class="app-info">pending</td>
+                    <td class="app-state-btn">
+                        <button class="app-state-btn-a">Accept</button>
+                        <button class="app-state-btn-r">Reject</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const acceptButtons = document.getElementsByClassName('app-state-btn-a');
+            const rejectButtons = document.getElementsByClassName('app-state-btn-r');
+
+            Array.from(acceptButtons).forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const row = button.closest('tr');
+                    row.querySelector('.app-info:last-child').textContent = 'Accepted';
+                    row.style.backgroundColor = '#c8e6c9'; // light green
+                });
+            });
+
+            Array.from(rejectButtons).forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const row = button.closest('tr');
+                    row.querySelector('.app-info:last-child').textContent = 'Rejected';
+                    row.style.backgroundColor = '#ffcdd2'; // light red
+                });
+            });
+        });
+    </script>
+</body>
+</html>

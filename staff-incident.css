@@ -1,0 +1,104 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('image7.jpg');
+    background-size: cover;
+}
+
+main {
+    width: 100%;
+    margin-top: 50px;
+    flex-grow: 1; /* Expand to fill remaining vertical space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* -----------------------------------*/
+
+/* search bar css */
+.search{
+    width: 330px;
+    float: left;
+}
+
+.srch{
+    font-family: 'Times New Roman';
+    width: 200px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid #ff7200;
+    margin-top: 13px;
+    color: #fff;
+    border-right: none;
+    font-size: 16px;
+    float: left;
+    padding: 10px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.srch::placeholder{
+    color: white;
+    opacity: 0.8;
+}
+.btn{
+    width: 100px;
+    height: 40px;
+    background: #ff7200;
+    border: 2px solid #ff7200;
+    margin-top: 13px;
+    color: #fff;
+    font-size: 15px;
+    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+.btn:hover{
+    color: #000;
+}
+
+.btn:focus{
+    outline: none;
+}
+
+.srch:focus{
+    outline: none;
+}
+
+/* --------------------------------- */
+
+.incident-table, td{
+    border:1px solid #ff7200;
+    border-collapse: collapse;
+    color: white;
+    padding: 15px;
+}
+.incident-table th  {
+    border:1px solid white;
+    background-color: #ff7200;
+    padding: 0px 10px;
+}
+.incident-table thead {
+    height: 50px;
+    font-size: large;
+}
+.inc-cost-info input{
+    height: 25px;
+    padding-left: 10px;
+}
+.inc-sub-btn {
+    width: 70px;
+}
+.inc-sub-btn button{
+    background-color: rgb(59, 244, 59);
+    border: none;
+    border-radius: 5px;
+    width: 55px;
+}

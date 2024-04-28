@@ -1,0 +1,19 @@
+{
+  "name": "mobi-insurance",
+  "version": "1.0.0",
+  "description": "This repository contains the files for DBMS project",
+  "main": "app.js",
+  "scripts": {
+    "dev": "npx nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.7"
+  }
+}

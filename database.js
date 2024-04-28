@@ -2,15 +2,15 @@ import mysql from 'mysql2'
 // import dotenv from 'dotenv'
 
 const pool = mysql.createPool({
-    host: '127.0.0.1',
+    host: 'localhost',
     user:'root',
-    password: 'Tatapunch*9',
+    password: 'Iamshiva!1',
     database: 'insurance'
 }).promise()
 
 
 export async function getcustomers(){
-const [rows] = await pool.query("select * from customer")
+const [rows] = await pool.query("select Cust_Id, concat(Cust_FName,' ', Cust_LName) as Name, Cust_Gender, Cust_DOB, Cust_Address, Cust_MOB_Number, Cust_Email, Cust_Passport_Number, Cust_Marital_Status, Cust_PPS_Number from insurance.customer")
 return rows
 }
 
@@ -78,6 +78,38 @@ export async function customerpassword(Password, Confirm_password) { // This fun
     } catch (error) {
         console.error('Error updating customer:', error);
         throw error; 
+    }
+}
+
+export async function createIncidentReport() {
+    
+
+    try {
+        const [result] = await pool.query(`SELECT Incident_Id, Incident_Type, Incident_Date FROM incident_report WHERE Incident_Report_Status = 'PENDING'`);
+        return result; // Return the ID of the newly created record
+    } catch (error) {
+        console.error("Error creating incident report:", error);
+        throw new Error("Failed to create incident report"); // Rethrow error for handling by the caller
+    }
+}
+
+export async function UpdateIncidentReport(Desc, Cost, Id) {
+    try {
+        // Use parameterized query to prevent SQL injection
+        const [result] = await pool.query(
+            `UPDATE incident_report SET Incident_Report_Description = ?, Incident_Cost = ? ,Incident_Report_Status='ACCEPTED' WHERE Incident_Id = ?`,
+            [Desc, Cost, Id]
+        );
+
+        if (result.affectedRows > 0) {
+            // If at least one row was updated, return success
+            return result; // Return result metadata to confirm successful update
+        } else {
+            throw new Error(`No incident found with ID: ${Id}`); // If no rows were affected, throw an error
+        }
+    } catch (error) {
+        console.error('Error updating incident:', error); // Log the error for debugging
+        throw error; // Rethrow the error to be handled by the caller
     }
 }
 

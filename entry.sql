@@ -1,3 +1,5 @@
+-- Active: 1708775152375@@127.0.0.1@3306@insurance
+USE insurance;
 INSERT INTO incident VALUES (2101, 'Fire', '2020-12-05', "Sparks from tear in the electric wiring systems are not covered in insurance'") ;
     INSERT INTO incident VALUES (2102, 'breakdown', '2020-12-12', '') ;
     INSERT INTO incident VALUES (2103, 'Fire', '2020-10-18', '') ;

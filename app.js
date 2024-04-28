@@ -1,17 +1,30 @@
 import express from 'express'
 import cors from 'cors';
-import {getcustomers,getcustomer,createcustomer,deletecustomer,updatecustomer,customerpassword,successcustomer,logincustomer} from './database.js'
+import { 
+    UpdateIncidentReport, 
+    getcustomers, 
+    getcustomer, 
+    createcustomer, 
+    deletecustomer, 
+    updatecustomer, 
+    customerpassword, 
+    successcustomer, 
+    logincustomer, 
+    createIncidentReport, 
+} from './database.js'
+
 const app = express();
 
-
+app.use(express.static('./staff_confirm_application'));
 app.use(express.json())
 app.use(cors({
-    origin: 'http://127.0.0.1:5500' 
+    origin: '*'
 }));
 app.get("/customers", async (req, res) => {
     try {
         const customers = await getcustomers();
-        res.send(customers);
+        res.status(200).json({ data: customers });
+    
     } catch (error) {
         console.error("Error fetching customers:", error);
         res.status(500).json({ error: "An error occurred while fetching customers" });
@@ -28,18 +41,19 @@ app.post("/login", async (req, res) => {
 
         const customers = await logincustomer(Cust_Email, Password);
 
-        
+
         if (customers.length === 0) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        
+
         const customer = customers[0];
+        console.log('customer:', customer);
         if (customer.Cust_Email === Cust_Email && customer.Password === Password) {
-            
+            // res.cookie('userEmail', Cust_Email, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) })
             res.status(200).send("Authentication successful");
         } else {
-            
+
             res.status(401).json({ error: "Invalid credentials" });
         }
     } catch (error) {
@@ -52,16 +66,16 @@ app.post("/login", async (req, res) => {
 app.get("/customer/:id", async (req, res) => {
     try {
         const id = req.params.id;
-        
-        
+
+
         const customer = await getcustomer(id);
-        
-        
+
+
         if (!customer) {
             return res.status(404).json({ error: "Customer not found" });
         }
 
-        
+
         res.send();
     } catch (error) {
         console.error("Error fetching customer:", error);
@@ -71,15 +85,15 @@ app.get("/customer/:id", async (req, res) => {
 
 app.get("/customer", async (req, res) => {
     try {
-        
+
         const customer = await successcustomer();
-        
-        
+
+
         if (!customer) {
             return res.status(404).json({ error: "Customer not found" });
         }
 
-        
+
         res.send(`<!DOCTYPE html>
             <html lang="en">
             <head>
@@ -180,12 +194,12 @@ app.post("/customers", async (req, res) => {
             Cust_PPS_Number
         } = req.body;
 
-        
+
         if (!Cust_FName || !Cust_LName || !Cust_DOB || !Cust_Gender || !Cust_Address || !Cust_MOB_Number) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        
+
         const customer = await createcustomer(
             Cust_FName,
             Cust_LName,
@@ -199,7 +213,7 @@ app.post("/customers", async (req, res) => {
             Cust_PPS_Number
         );
 
-        
+
         res.status(200).send(``);
     } catch (error) {
         console.error("Error creating customer:", error);
@@ -212,15 +226,15 @@ app.put("/customers", async (req, res) => {
     try {
         const { Cust_Id, Cust_Address } = req.body;
 
-        
+
         if (!Cust_Id || !Cust_Address) {
             return res.status(400).json({ error: "Cust_Id and Cust_Address are required fields" });
         }
 
-        
+
         const customer = await updatecustomer(Cust_Id, Cust_Address);
 
-       
+
         res.status(200).json({ message: "Customer information updated successfully", customer });
     } catch (error) {
         console.error("Error updating customer:", error);
@@ -230,17 +244,17 @@ app.put("/customers", async (req, res) => {
 
 app.delete("/customers/:id", async (req, res) => {
     try {
-        const cust_id = req.params.id; 
-        
-        
+        const cust_id = req.params.id;
+
+
         const deletedCustomer = await deletecustomer(cust_id);
 
-       
+
         if (!deletedCustomer) {
             return res.status(404).json({ error: "Customer not found" });
         }
 
-        
+
         res.status(204).send();
     } catch (error) {
         console.error("Error deleting customer:", error);
@@ -257,12 +271,12 @@ app.put("/password", async (req, res) => {
             Confirm_Password
         } = req.body;
 
-        
+
         if (!Password || !Confirm_Password) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        
+
         const customer = await customerpassword(
             Password,
             Confirm_Password
@@ -276,12 +290,56 @@ app.put("/password", async (req, res) => {
 });
 
 
+app.get("/submit-incident", async (req, res) => {
+    try {
+        const result = await createIncidentReport(); // Fetch the pending incidents
+
+        if (!result || result.length === 0) {
+            return res.status(404).json({ error: "No pending incidents found" }); // Return a 404 if there's no data
+        }
+
+        res.status(200).json({ data: result }); // Return the data as JSON
+    } catch (error) {
+        console.error("Error fetching incident reports:", error); // Log the error
+        res.status(500).json({ error: "An error occurred while fetching incident reports" }); // Return a 500 error response
+    }
+});
+
+app.put("/incidents/:Id", async (req, res) => {
+    const data = req.params.Id;
+    try {
+        let Desc = req.body.description;
+        let Cost = req.body.cost;
+
+
+        if (!Desc || !Cost) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+
+        const customer = await UpdateIncidentReport(
+            Desc,
+            Cost,
+            data
+        );
+
+        res.status(200).send(``);
+    } catch (error) {
+        console.error("Error creating customer:", error);
+        res.status(500).json({ error: "An error occurred while creating customer" });
+    }
+});
+
+
+
+
+
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something broke!')
-  })
+})
 
-app.listen(8080,()=>{
+app.listen(8080, () => {
     console.log('Server is running on port 8080')
 })

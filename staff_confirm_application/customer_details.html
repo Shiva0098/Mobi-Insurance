@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="confirm.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Details</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICES</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+
+        </div> 
+    </header>
+    <main>
+        <div class="search">
+            <input class="srch" type="search" placeholder="Customer Id">
+            <button class="btn" id="search-button">Search</button> <!-- Use ID for event listener -->
+        </div>
+    
+        <div class="details">
+            <table class="application-table">
+                <thead>
+                    <tr>
+                        <th>Cust Id</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>DOB</th>
+                        <th>Address</th>
+                        <th>Mob Number</th>
+                        <th>Email</th>
+                        <th>Passport Number</th>
+                        <th>Marital status</th>
+                        <th>PPS Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+                try {
+                    const response = await fetch('http://localhost:8080/customers', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json', // Expecting JSON
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Error fetching customers: ${response.status} ${response.statusText}`);
+                    }
+
+                    const responseData = await response.json(); // Parse the JSON response
+                    const data = responseData.data; // Access the 'data' property
+                    
+                    const tableBody = document.querySelector('.application-table tbody'); // Reference to the table body
+                    tableBody.innerText = ''; // Clear existing rows
+
+                    // Populate the table with customer data
+                    data.forEach(customer => {
+                        const row = document.createElement('tr');
+
+                        row.innerHTML = `
+                            <td>${customer.Cust_Id}</td>
+                            <td>${customer.Name}</td>
+                            <td>${customer.Cust_Gender}</td>
+                            <td>${customer.Cust_DOB}</td>
+                            <td>${customer.Cust_Address}</td>
+                            <td>${customer.Cust_MOB_Number}</td>
+                            <td>${customer.Cust_Email}</td>
+                            <td>${customer.Cust_Passport_Number}</td>
+                            <td>${customer.Cust_Marital_Status}</td>
+                            <td>${customer.Cust_PPS_Number}</td>
+                        `; // Populate the row with customer details
+                        
+                        tableBody.appendChild(row); // Add the row to the table body
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching customers:", error);
+                    alert("An error occurred while fetching customer data. Please try again later.");
+                }
+            });
+        
+    </script>
+</body>
+</html>
