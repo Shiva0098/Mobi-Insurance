@@ -294,9 +294,9 @@ app.get("/submit-incident", async (req, res) => {
     try {
         const result = await createIncidentReport(); // Fetch the pending incidents
 
-        if (!result || result.length === 0) {
-            return res.status(404).json({ error: "No pending incidents found" }); // Return a 404 if there's no data
-        }
+        // if (!result || result.length === 0) {
+        //     return res.status(404).json({ error: "No pending incidents found" }); // Return a 404 if there's no data
+        // }
 
         res.status(200).json({ data: result }); // Return the data as JSON
     } catch (error) {
