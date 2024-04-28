@@ -137,6 +137,9 @@ ul li a:hover{
 .app {
     width: 980px;
 }
+.app-state {
+    width: 100px;
+}
 .application-table thead {
     height: 50px;
     font-size:large;
@@ -147,8 +150,24 @@ ul li a:hover{
 .application-table tbody tr td {
     padding-left: 10px;
 }
-.application-table td{
-    height: 50px;
+.app-state-btn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 35px;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+    gap: 5px;
+}
+.app-state-btn-a {
+    background-color: rgb(59, 244, 59);
+    border: none;
+    border-radius: 5px;
+}
+.app-state-btn-r {
+    background-color: rgb(244, 59, 59);
+    border: none;
+    border-radius: 5px;
 }
 
 /* ------------------------------------------------------ */
