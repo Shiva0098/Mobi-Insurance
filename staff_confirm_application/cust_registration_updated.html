@@ -148,11 +148,7 @@
                 <select id="marital_status" name="marital_status">
                     <option value="Married">Married</option>
                     <option value="Unmarried">Unmarried</option>
-                </select>   
-            </p>
-            <p class="input_fields">
-                <label for="contact_number">Address:</label>
-                <input type="tel" id="cust_add">
+                </select>
             </p>
             <p class="input_fields">
                 <label for="pps_number">PPS Number:</label>
@@ -177,7 +173,6 @@
         const custPassportNumber = document.getElementById('passport_number').value;
         const custMaritalStatus = document.getElementById('marital_status').value;
         const custPPSNumber = document.getElementById('pps_number').value;
-        const custAddress = document.getElementById('cust_add').value;
         
         try {
                 const response = await fetch('/customers', {

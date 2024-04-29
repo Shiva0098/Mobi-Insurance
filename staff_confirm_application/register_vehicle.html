@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="staff-incident.css">
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Registration</title>
+    <style>
+        .container {
+            border: 3.5px solid #ff7200;
+            border-radius: 7px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .l_c {
+
+            color: white;
+            font-size: large;
+            font-family: Arial, Helvetica, sans-serif;
+
+        }
+
+        #heading {
+            margin-left: 85px;
+            font-size: x-large;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+
+        }
+
+        #button_id {
+            font-size: medium;
+            font-weight: 500;
+            padding: 7px;
+            border: 2px solid #ff7200;
+            border-radius: 4px;
+            transition: all ease 0.2s;
+        }
+
+        #button_id:hover {
+            color: white;
+            background-color: #ff7200;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICES </a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </header>
+
+    <main>
+        <div class="search">
+            <input class="srch" type="search" name="" placeholder="Search Customer">
+            <a href="#"> <button class="btn">Search</button></a>
+        </div>
+
+        <div class="container">
+            <form id="form_id">
+                <div class="form-group">
+                    <label class="l_c" id="heading">Vehicle Registration</label>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_reg_num" class="l_c">Vehicle Registration Number</label>
+                    <input type="text" id="vehicle_reg_num" required>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_value" class="l_c">Vehicle Value</label>
+                    <input type="text" id="vehicle_value">
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_type" class="l_c">Vehicle Type</label>
+                    <select id="vehicle_type">
+                        <option value="bike">Bike</option>
+                        <option value="car">Car</option>
+                        <option value="truck">Truck</option>
+                        <option value="truck">Commercial Vehicle</option>
+                    </select>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_manufacturer" class="l_c">Vehicle Manufacturer</label>
+                    <input type="text" id="vehicle_manufacturer">
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_engine_num" class="l_c">Vehicle Engine Number</label>
+                    <input type="text" id="vehicle_engine_num">
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_chassis_num" class="l_c">Vehicle Chassis Number</label>
+                    <input type="text" id="vehicle_chassis_num">
+                </div>
+
+                <br><br>
+                <div class="form-group">
+                    <label for="vehicle_model_num" class="l_c">Vehicle Model Number</label>
+                    <input type="text" id="vehicle_model_num">
+                </div>
+                <br><br>
+                <a href="show_application_main.html">
+            </form>
+            <button id="get-application-button">Get Application</button>
+            <button id="get-quote-button">Get Quote</button>
+        </div>
+
+    </main>
+    <script defer>
+        const doQuery = async function (redirectUrl) {
+            // event.preventDefault(); // Prevent default form submission behavior
+
+            // Get individual form input values using getElementById()
+            // Provide appropriate policy ID
+            const vehicleRegNumber = document.getElementById('vehicle_reg_num').value;
+            const vehicleValue = document.getElementById('vehicle_value').value;
+            const vehicleType = document.getElementById('vehicle_type').value;
+            const vehicleManufacturer = document.getElementById('vehicle_manufacturer').value;
+            const vehicleEngineNumber = document.getElementById('vehicle_engine_num').value;
+            const vehicleChasisNumber = document.getElementById('vehicle_chassis_num').value;
+            const vehicleModelNumber = document.getElementById('vehicle_model_num').value;
+
+            // Combine individual pieces into a JSON object
+            const formData = JSON.stringify({
+                Vehicle_Registration_Number: vehicleRegNumber,
+                Vehicle_Value: vehicleValue,
+                Vehicle_Type: vehicleType,
+                Vehicle_Manufacturer: vehicleManufacturer,
+                Vehicle_Engine_Number: vehicleEngineNumber,
+                Vehicle_Chasis_Number: vehicleChasisNumber,
+                Vehicle_Model_Number: vehicleModelNumber,
+            });
+
+            try {
+                const response = await fetch('/register-vehicle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Indicate JSON data
+                    },
+                    body: formData, // Send the combined JSON data
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error registering vehicle: ${response.status} ${response.statusText}`);
+                }
+
+                alert('Vehicle registered successfully!');
+                window.location.href = redirectUrl;
+
+            } catch (error) {
+                console.error("Error registering vehicle:", error); // Log the error
+                alert("An error occurred while registering the vehicle. Please try again later."); // User-friendly error message
+            }
+        }
+
+        document.getElementById('form_id')
+            .addEventListener('submit', e => e.preventDefault());
+
+        document.getElementById('get-application-button')
+            .addEventListener('click', () => doQuery('/show_application.html'));
+
+        document.getElementById('get-quote-button')
+            .addEventListener('click', () => doQuery('/show_quote.html'));
+    </script>
+
+</body>
+
+</html>

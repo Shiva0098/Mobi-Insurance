@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="staff-incident.css">
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register NOK</title>
+
+    <style>
+        .l_c {
+            color: white;
+            margin-right: 10px;
+            font-size: larger;
+        }
+
+        .nok_form {
+            border: 3px solid #ff7200;
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .button_c {
+            padding: 5px;
+            font-size: large;
+            margin-left: 130px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICES</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <div class="search">
+            <input class="srch" type="search" name="" placeholder="Search Customer">
+            <a href="#"> <button class="btn">Search</button></a>
+        </div>
+
+        <div class="nok_form">
+            <form id="nok-form"> <!-- Form for Registering NOK -->
+                <label class="l_c">NOK Name:</label>
+                <input type="text" id="nok-name" name="Nok_Name" required>
+                <br><br><br>
+                <label class="l_c">NOK Address:</label>
+                <input type="text" id="nok-address" name="Nok_Address" required>
+                <br><br><br>
+                <label class="l_c">NOK Phone Number:</label>
+                <input type="text" id="nok-phone" name="Nok_Phone_Number" required>
+                <br><br><br>
+                <label class="l_c">NOK Marital Status:</label>
+                <select id="marital-status" name="Nok_Marital_Status" required>
+                    <option value="Married">Married</option>
+                    <option value="Unmarried">Unmarried</option>
+                </select>
+                <br><br><br>
+                <label class="l_c">NOK Gender:</label>
+                <select id="gender" name="Nok_Gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <br><br><br>
+                <input type="submit" value="Submit" class="button_c"> <!-- Submit button -->
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('nok-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            const formData = {
+                Nok_Name: document.getElementById('nok-name').value,
+                Nok_Address: document.getElementById('nok-address').value,
+                Nok_Phone_Number: document.getElementById('nok-phone').value,
+                Nok_Marital_Status: document.getElementById('marital-status').value,
+                Nok_Gender: document.getElementById('gender').value,
+            };
+
+            try {
+                const response = await fetch('/register-nok', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData), // Convert form data to JSON
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error registering NOK: ${response.status} ${response.statusText}`);
+                }
+
+                alert('NOK registered successfully!'); // Success message
+            } catch (error) {
+                console.error("Error registering NOK:", error); // Log the error
+                alert("An error occurred while registering NOK. Please try again later."); // Error message
+            }
+        });
+    </script>
+</body>
+</html>

@@ -50,7 +50,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
             try {
-                const response = await fetch('http://localhost:8080/submit-incident', {
+                const response = await fetch('/submit-incident', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -99,7 +99,7 @@
                         const cost = row.querySelector('.inc-cost-info input').value; // Get the cost
 
                         try {
-                            const putResponse = await fetch(`http://localhost:8080/incidents/${incidentId}`, {
+                            const putResponse = await fetch(`/incidents/${incidentId}`, {
                                 method: 'PUT', // Use PUT to update the record
                                 headers: {
                                     'Content-Type': 'application/json',

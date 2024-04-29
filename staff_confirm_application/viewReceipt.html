@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="viewReceipt.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Receipts</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <h1>Receipts</h1>
+        <table class="view-receipt">
+            <thead>
+                <tr>
+                    <th>Receipt ID</th>
+                    <th>Payment ID</th>
+                    <th>Cost</th>
+                    <th>Date-Time</th>
+                </tr>
+            </thead>
+            <tbody id="receipt-body">
+                <!-- Content will be inserted here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/get-receipts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error fetching receipts: ${response.status} ${response.statusText}`);
+                }
+
+                const responseData = await response.json(); // Assuming JSON response
+                const data = responseData.data; // Accessing the 'data' property from the response
+
+                const tableBody = document.getElementById('receipt-body'); // Get the table body
+
+                // Clear existing content
+                tableBody.innerHTML = '';
+
+                // Populate the table with receipt data
+                data.forEach(receipt => {
+                    const row = `
+                        <tr>
+                            <td>${receipt.Receipt_Id}</td>
+                            <td>${receipt.Premium_Payment_Id}</td>
+                            <td>${receipt.Cost}</td>
+                            <td>${new Date(receipt.Time).toLocaleString()}</td> <!-- Format date-time -->
+                        </tr>
+                    `; // Build the row content with innerHTML
+
+                    tableBody.innerHTML = row; // Append to the existing content
+                });
+
+            } catch (error) {
+                console.error("Error fetching receipts:", error);
+                alert("An error occurred while fetching receipt data. Please try again later."); // Inform the user
+            }
+        });
+    </script>
+</body>
+</html>

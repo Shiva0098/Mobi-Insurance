@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="staff-incident_1.css">
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICES</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <div class="search">
+            <input class="srch" type="search" name="" placeholder="Search Customer">
+            <a href="#"> <button class="btn">Search</button></a>
+        </div>
+
+        <h1>Incident Report</h1>
+        <form id="incident-form"> <!-- Form for incident report -->
+            <table class="incident-table">
+                <thead>
+                    <tr>
+                        <th>Vehicle Registration No.</th>
+                        <th>Incident Type</th>
+                        <th>Incident Date</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- Unique IDs for form fields -->
+                        <td><input type="text" id="Vehicle_no" name="Vehicle_no" required></td> 
+                        <td><input type="text" id="incident-type" name="Incident_Type" required></td> <!-- Input field for type -->
+                        <td><input type="date" id="incident-date" name="Incident_Date" required></td> <!-- Input field for date -->
+                        <td><textarea id="description" name="Description" required></textarea></td> <!-- Textarea for description -->
+                        <td>Pending</td> <!-- Status is pending -->
+                        <td><button type="submit">Submit</button></td> <!-- Submit button -->
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('nok-form'); // Ensure the form has the correct ID
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent the default form submission behavior
+    
+                // Get individual form input values using getElementById
+                const nokName = document.getElementById('nok-name').value;
+                const nokAddress = document.getElementById('nok-address').value;
+                const nokPhone = document.getElementById('nok-phone').value;
+                const nokMaritalStatus = document.getElementById('marital-status').value;
+                const nokGender = document.getElementById('gender').value;
+    
+                // Create an object with the individual form data
+                const formData = {
+                    Nok_Name: nokName,
+                    Nok_Address: nokAddress,
+                    Nok_Phone_Number: nokPhone,
+                    Nok_Marital_Status: nokMaritalStatus,
+                    Nok_Gender: nokGender,
+                };
+    
+                try {
+                    const response = await fetch('/register-nok', {
+                        method: 'POST', // Use POST method
+                        headers: {
+                            'Content-Type': 'application/json', // Indicates JSON data
+                        },
+                        body: JSON.stringify(formData), // Convert the object to JSON
+                    });
+    
+                    // Check if the response is successful
+                    if (!response.ok) {
+                        throw new Error(`Error registering NOK: ${response.status} ${response.statusText}`);
+                    }
+    
+                    alert('NOK registered successfully!'); // Success message
+                } catch (error) {
+                    console.error("Error registering NOK:", error); // Log the error
+                    alert("An error occurred while registering NOK. Please try again later."); // Notify the user
+                }
+            });
+        });
+    </script>
+    
+    </body>
+    </html>
+    

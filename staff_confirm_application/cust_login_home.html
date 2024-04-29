@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css" />
+    <title>Plans</title>
+
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <div class="greet">
+            <div class="welc">Welcome,</div>
+            <div class="First-name">Firstname</div>
+        </div>
+        <div class="options">
+            <a href="/vehicles">
+                <button>My Vehicles</button>
+            </a>
+            <a href="/viewincidents">
+                <button>Incidents</button>
+            </a>
+            <a href="/viewReceipt.html">
+                <button>Receipts</button>
+            </a>
+
+            <!-- Dropdown menu for multiple policy options -->
+            <div class="dropdown">
+                <button>My Policies</button>
+                <div class="dropdown-content">
+                    <a href="viewPolicy.html">View Policies</a>
+                    <a href="register_vehicle.html">Create Policy</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+</body>
+</html>

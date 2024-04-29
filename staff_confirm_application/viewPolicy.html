@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="viewPolicy.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Policies</title>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <h1>Policy Details</h1>
+        <table class="view-policy">
+            <thead>
+                <tr>
+                    <th>Agreement ID</th>
+                    <th>Application ID</th>
+                    <th>Policy No.</th>
+                    <th class="date">Start Date</th>
+                    <th class="date">Expiry Date</th>
+                    <th class="desc">Description</th>
+                </tr>
+            </thead>
+            <tbody id="policy-body"> <!-- Ensure this ID is unique and matches in JavaScript -->
+                <!-- Content will be populated here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/get-policies', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json', // Indicate the expected response type
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error fetching policies: ${response.status} ${response.statusText}`);
+                }
+
+                const responseData = await response.json(); // Parse the JSON response
+                const data = responseData.data; // Access the 'data' property from the response
+
+                const tableBody = document.getElementById('policy-body'); // Reference to the table body
+
+                // Clear existing content
+                tableBody.innerHTML = ''; // Avoid duplicate data
+
+                // Populate the table with policy data
+                data.forEach(policy => {
+                    const row = `
+                        <tr>
+                            <td>${policy.Agreement_Id}</td>
+                            <td>${policy.Application_Id}</td>
+                            <td>${policy.Policy_Number}</td>
+                            <td>${new Date(policy.Start_Date).toLocaleDateString()}</td> <!-- Format the date -->
+                            <td>${new Date(policy.Expiry_Date).toLocaleDateString()}</td> <!-- Format the date -->
+                            <td>${policy.Term_Condition_Description}</td>
+                        </tr>
+                    `; // Build the row content with innerHTML
+
+                    tableBody.innerHTML += row; // Append to the existing content
+                });
+
+            } catch (error) {
+                console.error("Error fetching policies:", error);
+                alert("An error occurred while fetching policy data. Please try again later."); // Notify the user
+            }
+        });
+    </script>
+</body>
+</html>

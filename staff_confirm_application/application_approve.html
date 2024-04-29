@@ -33,23 +33,21 @@
         <table class="application-table">
             <thead>
                 <tr>
-                    <th class="claim-id">Claim Id</th>
-                    <th class="claim">Cust Id </th>
-                    <th class="claim">Incident Id</th>
-                    <th class="claim">Claim Amount</th>
-                    <th class="claim">Date of claim</th>
-                    <th class="claim">Claim Status </th>
-                    <th class="claim-state">State</th>
+                    <th class="app-id">Application Id</th>
+                    <th class="app-cid">Customer ID</th>
+                    <th class="app-vid">Vehicle Id </th>
+                    <th class="app-pid">Product Id</th>
+                    <th class="app-clvl">Coverage Levelt</th>
+                    <th class="app-state"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="app-id-info">1</td>
-                    <td class="app-info">qwertyuio</td>
-                    <td class="app-info">69</td>
-                    <td class="app-info">$5000</td>
-                    <td class="app-info">20/04/2024</td>
-                    <td class="app-info">pending</td>
+                    <td class="app-cid-info">1</td>
+                    <td class="app-vid-info">69</td>
+                    <td class="app-pid-info">5</td>
+                    <td class="app-clvl-info">High</td>
                     <td class="app-state-btn">
                         <button class="app-state-btn-a">Accept</button>
                         <button class="app-state-btn-r">Reject</button>
@@ -66,7 +64,7 @@
             Array.from(acceptButtons).forEach(function(button) {
                 button.addEventListener('click', function() {
                     const row = button.closest('tr');
-                    row.querySelector('.app-info:last-child').textContent = 'Accepted';
+                    row.querySelector('.app-info:last-child').textContent = 'ACCEPTED';
                     row.style.backgroundColor = '#c8e6c9'; // light green
                 });
             });
@@ -74,11 +72,29 @@
             Array.from(rejectButtons).forEach(function(button) {
                 button.addEventListener('click', function() {
                     const row = button.closest('tr');
-                    row.querySelector('.app-info:last-child').textContent = 'Rejected';
+                    row.querySelector('.app-info:last-child').textContent = 'REJECTED';
                     row.style.backgroundColor = '#ffcdd2'; // light red
                 });
             });
         });
+        function updateStatus(appId, status) {
+            fetch('/update-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ appId: parseInt(appId), status: status })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                const row = document.querySelector(`.app-id-info:contains("${appId}")`).parentNode;
+                row.querySelector('.app-state-btn').innerHTML = status;
+                row.style.backgroundColor = status === 'ACCEPTED' ? '#c8e6c9' : '#ffcdd2';
+            })
+            .catch(error => console.error('Error updating application status:', error));
+        }
+    
     </script>
 </body>
 </html>

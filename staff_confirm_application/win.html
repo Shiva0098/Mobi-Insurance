@@ -301,55 +301,53 @@
                 <li><a href="#">ABOUT</a></li>
                 <li><a href="#">SERVICE</a></li>
                 <li><a href="#">DESIGN</a></li>
-                <li><a href="#">CONTACT</a></li>
+                <li><a href="viewReceipt.html">CONTACT</a></li>
             </ul>
         </div>
-
-
     </div>
+
     <div class="content">
-        <h1>Hello!<br><span>Ensuring safety of you</span> <br>Ensurance</h1>
-        
+        <h1 id="greeting">Hello!</h1> <!-- Placeholder for greeting -->
+        <div id="customerDetails"></div> <!-- Display customer details here -->
     </div>
 </div>
+
 <script>
-    const baseUrl = 'http://localhost:8080';
-
-    document.getElementById('signin').addEventListener('submit', async function(event) {
-        event.preventDefault(); 
-
-       
-        const email = document.getElementById('Cust_Email').value;
-        const password = document.getElementById('Cust_Password').value;
+    document.getElementById('fetch-customer').addEventListener(async function() { // Get the customer ID from the input
 
         try {
-            const response = await fetch(baseUrl + '/login', {
-                method: 'GET', 
+            const response = await fetch(`/customer`, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    Cust_Email: email,
-                    Password: password
-                })
+                }
             });
 
-            if (response.ok) {
-                window.location.href = "win.html"; 
-            } else {
-                const data = await response.json(); 
-                console.error('Error:', data.error); 
-                alert('Login failed! Please check your credentials.');
+            if (!response.ok) {
+                throw new Error(`Failed to fetch customer: ${response.status} ${response.statusText}`);
             }
+
+            const customerData = await response.json(); // Parse the JSON response
+            const customer = customerData; // Assuming the response returns a list of customers
+
+            const greeting = `Hi! ${customer.Fname}`; // Use customer name for the greeting
+            document.getElementById('greeting').innerText = greeting; // Set the greeting message
+
+            // Display customer details
+            const customerDetailsDiv = document.getElementById('customerDetails');
+            customerDetailsDiv.innerHTML = `
+                <p>First Name: ${customer.Fname}</p>
+                <p>Last Name: ${customer.Lname}</p>
+                <p>Email: ${customer.Email}</p>
+                <p>Phone: ${customer.Mob_Number}</p>
+            `;
+
         } catch (error) {
-            console.error('An unexpected error occurred:', error); 
-            alert('An unexpected error occurred! Please try again later.'); 
+            console.error("Error fetching customer:", error);
+            alert("Could not fetch customer data. Please try again later.");
         }
     });
 </script>
-
-
-
 
 </body>
 </html>

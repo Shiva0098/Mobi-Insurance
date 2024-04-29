@@ -9,14 +9,32 @@ const pool = mysql.createPool({
 }).promise()
 
 
-export async function getcustomers(){
+export async function GetAllCustomers(){
 const [rows] = await pool.query("select Cust_Id, concat(Cust_FName,' ', Cust_LName) as Name, Cust_Gender, Cust_DOB, Cust_Address, Cust_MOB_Number, Cust_Email, Cust_Passport_Number, Cust_Marital_Status, Cust_PPS_Number from insurance.customer")
 return rows
 }
 
 export async function logincustomer(email, pass) {
     try {
-        const [rows] = await pool.query("SELECT Cust_Email,Password FROM customer WHERE Cust_Email = ? AND Password = ?", [email, pass]);
+        const [rows] = await pool.query("SELECT Cust_Id, Cust_Email,Password FROM customer WHERE Cust_Email = ? AND Password = ?", [email, pass]);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching customers:", error);
+        throw error; 
+    }
+}
+export async function incidenthistory(){
+    try{
+        const [rows] = await pool.query(`Select * from  incident_report where Incident_Report_Status='ACCEPTED'`);
+        return rows
+    }catch(error){
+        console.error("Error fetching incident history:", error);
+        throw error; 
+    }
+}
+export async function loginstaff(email, pass) {
+    try {
+        const [rows] = await pool.query("SELECT Staff_Email,Password FROM staff WHERE Staff_Email = ? AND Password = ?", [email, pass]);
         return rows;
     } catch (error) {
         console.error("Error fetching customers:", error);
@@ -24,8 +42,7 @@ export async function logincustomer(email, pass) {
     }
 }
 
-
-export async function successcustomer(cust_id){
+export async function successcustomer(){
     const [rows] = await pool.query(`select Cust_Id, Cust_FName, Cust_LName, Cust_DOB, Cust_Gender, Cust_Address, Cust_MOB_Number, Cust_Email, Cust_Passport_Number, Cust_Marital_Status, Cust_PPS_Number from customer group by cust_id having cust_id = (select max(cust_id) from customer);`)
     // This funciton or the basic syntax is for viewing/reading from a table.It can be modified according to the requirements.
     return rows
@@ -113,6 +130,121 @@ export async function UpdateIncidentReport(Desc, Cost, Id) {
     }
 }
 
+export async function UpdateApplicationStatus(appId, status) {
+    try {
+        const [result] = await pool.query(
+            `UPDATE Application SET Application_Status = ? Where Application_Id = ?`, [status, appId]
+        );
+        return result;
+    } catch (error) {
+        console.error('Error Updating Application:', error); // Log the error for debugging
+        throw error;
+    }
+}
+export async function RegisterIncident(Vehicle_Number,Incident_Type, Incident_Date, Description, id) {
+    try {
+        const [result] = await pool.query(
+            `INSERT INTO incident(Incident_Id, Incident_Type, Incident_Date, Description, Cust_id,Vehicle_Number) VALUES (NULL, ?, ?, ?, ?,?)`,
+            [Incident_Type, Incident_Date, Description, id,Vehicle_Number]
+        );
+        
+        console.log("Rows affected:", result.affectedRows);
+        return result;
+    } catch (error) {
+        console.error("Error inserting data:", error.message, "\nStack:", error.stack); // Detailed error information
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+export async function RegisterNok(Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status,application_id,agreement_id) {
+
+    if (!Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status) {
+        throw new Error("Missing required fields");
+    }
+
+    try {
+        const [result] = await pool.query(
+            `INSERT INTO nok(Nok_Id, Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status,Application_Id,Agreement_id) 
+             VALUES (NULL, ?, ?, ?, ?, ?,?,?)`, // Removed the extra closing parenthesis
+            [Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status,application_id,agreement_id]
+        );
+        
+        
+        console.log("Rows affected:", result.affectedRows); // Check the number of affected rows
+        return result; // Return the query result
+    } catch (error) {
+        console.error("Error inserting data:", error.message, "\nStack:", error.stack); // Detailed error information
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+export async function RegisterVehicle( Vehicle_Registration_Number, Vehicle_Value, Vehicle_Type, Vehicle_Manufacturer, Vehicle_Engine_Number, Vehicle_Chasis_Number,Vehicle_Model_Number,Cust_Id) {
+
+    // if (!Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status) {
+    //     throw new Error("Missing required fields");
+    // }
+    
+    try {
+        const [result] = await pool.query(
+            `INSERT INTO vehicle(Vehicle_Id,Policy_Id, Dependent_NOK_ID, Vehicle_Registration_Number, Vehicle_Value, Vehicle_Type, Vehicle_Size, Vehicle_Number_Of_Seat, Vehicle_Manufacturer, Vehicle_Engine_Number, Vehicle_Chasis_Number,  Vehicle_Model_Number,Cust_Id) 
+             VALUES (NULL, NULL, NULL, ?, ?, ?,NULL,NULL,?,?,?,?,?)`, // Removed the extra closing parenthesis
+            [ Vehicle_Registration_Number, Vehicle_Value, Vehicle_Type,  Vehicle_Manufacturer, Vehicle_Engine_Number, Vehicle_Chasis_Number, Vehicle_Model_Number,Cust_Id]
+        );
+        
+        
+        console.log("Rows affected:", result.affectedRows); // Check the number of affected rows
+        return result; // Return the query result
+    } catch (error) {
+        console.error("Error inserting data:", error.message, "\nStack:", error.stack); // Detailed error information
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+export async function RegisterApp( Vehicle_Registration_Number, Product_Id, Coverage_Level,Cust_Id) {
+
+    // if (!Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status) {
+    //     throw new Error("Missing required fields");
+    // }
+    
+    try {
+        const [result] = await pool.query(
+            `WITH VehId AS (
+                SELECT Vehicle_Id 
+                FROM VEHICLE 
+                WHERE Vehicle_Registration_Number = ?
+            )
+            INSERT INTO application (Vehicle_Registration_Number , Product_Id, Coverage_Level, Cust_Id, Vehicle_Id) 
+            SELECT ?, ?, ?, ?, VehId.Vehicle_Id
+            FROM VehId;
+            `, // Removed the extra closing parenthesis
+            [ Vehicle_Registration_Number,Vehicle_Registration_Number, Product_Id, Coverage_Level,Cust_Id]
+        );
+        
+        
+        console.log("Rows affected:", result.affectedRows); // Check the number of affected rows
+        return result; // Return the query result
+    } catch (error) {
+        console.error("Error inserting data:", error.message, "\nStack:", error.stack); // Detailed error information
+        throw error; // Re-throw the error to be caught by the caller
+    }
+}
+
+export async function Getpolicies(C_Id){
+    try {
+        const [result] = await pool.query(`SELECT * FROM insurance_policy Where Cust_Id = ?`, [C_Id]);
+        return result;
+    } catch(error) {
+        console.error("Error Getting Policies");
+        throw error;
+    }
+}
+export async function GetReceipts(C_Id) {
+    try {
+        const [result] = await pool.query(`SELECT * FROM receipt Where Cust_Id = ?`, [C_Id]);
+        return result;
+
+    } catch(error) {
+        console.error("Error Getting Receipts");
+        throw error;
+    }
+}
 
 // const notes = await successcustomer()
 // console.log(`${notes[0].Cust_Id}`)
