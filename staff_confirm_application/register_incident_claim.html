@@ -58,50 +58,48 @@
         </form>
     </main>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('nok-form'); // Ensure the form has the correct ID
-            form.addEventListener('submit', async function(event) {
-                event.preventDefault(); // Prevent the default form submission behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('incident-form'); // Reference to the form element
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
     
-                // Get individual form input values using getElementById
-                const nokName = document.getElementById('nok-name').value;
-                const nokAddress = document.getElementById('nok-address').value;
-                const nokPhone = document.getElementById('nok-phone').value;
-                const nokMaritalStatus = document.getElementById('marital-status').value;
-                const nokGender = document.getElementById('gender').value;
+            // Collect form data
+            const vehicleNumber = document.getElementById('Vehicle_no').value;
+            const incidentType = document.getElementById('incident-type').value;
+            const incidentDate = document.getElementById('incident-date').value;
+            const description = document.getElementById('description').value;
     
-                // Create an object with the individual form data
-                const formData = {
-                    Nok_Name: nokName,
-                    Nok_Address: nokAddress,
-                    Nok_Phone_Number: nokPhone,
-                    Nok_Marital_Status: nokMaritalStatus,
-                    Nok_Gender: nokGender,
-                };
+            try {
+                // Send a POST request to the server with the form data
+                const response = await fetch('/register-incident', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Content-Type header to indicate JSON data
+                    },
+                    body: JSON.stringify({
+                        Vehicle_Number: vehicleNumber,
+                        Incident_Type: incidentType,
+                        Incident_Date: incidentDate,
+                        Description: description,
+                    }), // Convert the collected data to JSON
+                });
     
-                try {
-                    const response = await fetch('/register-nok', {
-                        method: 'POST', // Use POST method
-                        headers: {
-                            'Content-Type': 'application/json', // Indicates JSON data
-                        },
-                        body: JSON.stringify(formData), // Convert the object to JSON
-                    });
-    
-                    // Check if the response is successful
-                    if (!response.ok) {
-                        throw new Error(`Error registering NOK: ${response.status} ${response.statusText}`);
-                    }
-    
-                    alert('NOK registered successfully!'); // Success message
-                } catch (error) {
-                    console.error("Error registering NOK:", error); // Log the error
-                    alert("An error occurred while registering NOK. Please try again later."); // Notify the user
+                if (!response.ok) {
+                    throw new Error(`Error registering incident: ${response.status} ${response.statusText}`);
                 }
-            });
-        });
-    </script>
     
+                // Display success message or take appropriate action
+                alert("Incident registered successfully!");
+                // Optionally, redirect or clear the form
+                form.reset(); // Clear the form
+            } catch (error) {
+                console.error("Error submitting incident report:", error); // Log the error for debugging
+                alert("An error occurred while registering the incident. Please try again later."); // User-friendly error message
+            }
+        });
+    });
+    
+    </script>
     </body>
     </html>
     

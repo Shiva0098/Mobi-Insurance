@@ -116,7 +116,7 @@ CREATE TABLE INCIDENT_REPORT (
     Incident_Cost INTEGER NULL,
     Incident_Report_Description VARCHAR(255) NULL,
     Incident_Id BIGINT NOT NULL,
-    Application_Id BIGINT not null,
+    Application_Id BIGINT null,
     Cust_Id BIGINT NOT NULL,
     CONSTRAINT XPKINCIDENT_REPORT_18 PRIMARY KEY (Incident_Report_Id),
     CONSTRAINT FK_INCIDENT_ID FOREIGN KEY (Incident_Id) REFERENCES INCIDENT (Incident_Id),

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="show-application.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Details</title>
+    
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <form action="" class="app-form" id="applicationForm">
+            <h2>Claim Application</h2>
+            <div>
+                <label for="claim-amount">Claim Amount:</label> <!-- Changed from Product ID -->
+                <input id="claimAmount" type="number" min="0" step="0.01" required> <!-- Claim amount input -->
+            </div>
+            
+            <button type="submit" id="submit-btn">Submit</button> <!-- Submit button -->
+        </form>
+    </main>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('applicationForm'); // Reference the form by ID
+    
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission behavior
+    
+                // Retrieve the claim amount value from the form
+                const claimAmount = document.getElementById('claimAmount').value;
+    
+                // Construct the JSON object with the required data
+                const data = {
+                    Claim_Amount: claimAmount
+                };
+    
+                try {
+                    const response = await fetch('/amount-claim', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json' // Specify JSON content type
+                        },
+                        body: JSON.stringify(data) // Convert the data to JSON within body
+                    });
+    
+                    if (response.ok) {
+                        alert('Claim application submitted successfully!');
+                        window.location.href = "/payment_gateway.html"; // Redirect after success
+                    } else {
+                        throw new Error('Failed to submit claim application'); // If response is not okay
+                    }
+                } catch (error) {
+                    console.error('Error:', error); // Log the error for debugging
+                    alert('Error submitting claim application'); // User-friendly error message
+                }
+            });
+        });
+    </script>
+    
+    
+    
+</body>
+</html>

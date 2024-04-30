@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="show-application.css">
+    <!-- <link rel="stylesheet" href="../header.css"> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Details</title>
+
+    <style>
+        
+        .form_c{
+            margin-top: 50px;
+            border: 3px solid #ff7200;
+            border-radius: 5px;
+            padding: 20px;
+            backdrop-filter: blur(30px);
+            font-weight: bold;
+            margin-left: 40px;
+        }
+
+        .label_c{
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: large;
+            padding:10px;
+            text-align: center; /* Center text */
+        }
+
+        #submitbutton{
+            margin-left: 190px;
+            margin-top: 50px;
+            padding: 7px;
+            border-radius: 10px;
+            border: 3px solid #ff7200;
+        }
+
+        .div_table {
+            border: 3px solid #ff7200;
+            padding:10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center the table */
+        }
+
+        .table_row {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 10px;
+        }
+
+        .table_c {
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            border: 1px solid #ff7200;
+            padding: 10px;
+            flex: 1;
+            margin-right: 10px; /* Adjust spacing between columns */
+        }
+
+        .table_c:first-child {
+            margin-right: 0; /* Remove right margin for the first column */
+        }
+
+        .table_c:nth-child(even) {
+            /* background-color: #ff7200; Alternate row background color */
+        }
+
+        .table_c th {
+            /* background-color: #ff7200; */
+            color: white;
+            padding: 10px;
+            flex: 1;
+            margin-right: 10px; /* Adjust spacing between columns */
+        }
+
+        .table_c th:first-child {
+            margin-right: 0; /* Remove right margin for the first column */
+        }
+
+        .label_c
+        {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1{
+            margin-bottom: 50px;
+            font-size: xx-large;
+            text-align: center; /* Center text */
+            margin-top: 20px; /* Adjust top margin */
+        }
+
+        #payment{
+            margin-top: 50px;
+            font-size: xx-large;
+            margin-right: 20px;
+            text-align: center; /* Center text */
+        }
+
+        .button_s{
+            font-size: xx-large;
+            font-family:Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            border:3px solid white;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px; /* Add margin for spacing */
+            transition: background-color 0.3s ease; /* Add transition */
+        }
+
+        .b_c{
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            margin-top: 20px; /* Adjust top margin */
+        }
+
+        .b_c .button_s:hover {
+            background-color: rgba(255, 255, 255, 0.5); /* Change background color on hover */
+            cursor: pointer; /* Change cursor on hover */
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+
+        <h1 class="label_c" style="font-size: 2em;">Quote Details</h1> <!-- Change only the font size here -->
+
+        <div class="div_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="label_c">Quote Id</th>
+                        <th class="label_c">Issue Date</th>
+                        <th class="label_c">Valid From Date</th>
+                        <th class="label_c">Valid Till Date</th>
+                        <th class="label_c">Description</th>
+                        <th class="label_c">Product Id</th>
+                        <th class="label_c">Coverage Level</th>
+                        <th class="label_c">Coverage Amount</th>
+                        <th class="label_c">Customer Id</th>
+                        
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                        <td class="label_c">Data</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            
+        </div>
+
+
+
+    </main>
+</body>
+</html>

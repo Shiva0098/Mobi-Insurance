@@ -1,0 +1,138 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('/image7.jpg');
+    background-size: cover;
+}
+
+body {
+    background-image: url('/image7.jpg');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+  }
+
+/* ------------------------------- */
+
+.products-table {
+    margin: 100px 0px;
+}
+
+.products-table, td {
+    border:1px solid #ff7200;
+    border-collapse: collapse;
+    color: white;
+    height: 50px;
+}
+.products-table th {
+    border:1px solid white;
+    background-color: #ff7200;
+    padding: 0px 10px;
+    height: 30px;
+}
+.products-table td {
+    padding-left: 10px;
+}
+
+
+.app-form {
+    border: 2px solid #ff7200;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+.app-form h2 {
+    color: white;
+    text-align: center;
+    padding: 10px 0px 20px;
+}
+.app-form label {
+    color: white;
+    padding: 30px;
+}
+.app-form input {
+    border: none;
+    height: 20px;
+    padding-left: 10px;
+}
+
+/* ---------------------------- */
+
+.navbar{
+    width: 1200px;
+    height: 75px;
+    display: flex;
+}
+
+.icon{
+    width: 200px;
+    height: 70px;
+}
+
+.logo{
+    color: #ff7200;
+    font-size: 35px;
+    font-family: Arial;
+    padding-left: 20px;
+    float: left;
+    padding-top: 10px;
+    margin-top: 5px
+}
+
+.menu{
+    width: 400px;
+    height: 70px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+ul{
+    margin-right: auto;
+    justify-self: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+ul li{
+    list-style: none;
+    font-size: 14px;
+}
+
+ul li a{
+    text-decoration: none;
+    color: #fff;
+    font-family: Arial;
+    font-weight: bold;
+    transition: 0.4s ease-in-out;
+}
+
+ul li a:hover{
+    color: #ff7200;
+}
+
+.menu button {
+    align-self: center;
+    background-color: transparent;
+    border: 2px solid #ff7200;
+    border-radius: 5px;
+    color: white;
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+.menu button:hover {
+    color: black;
+    background-color: #ff7200;
+}

@@ -1,15 +1,15 @@
 import express from 'express'
 import cors from 'cors';
-import { 
-    UpdateIncidentReport, 
-    GetAllCustomers, 
-    getcustomer, 
-    createcustomer, 
-    deletecustomer, 
-    updatecustomer, 
-    customerpassword, 
-    successcustomer, 
-    logincustomer, 
+import {
+    UpdateIncidentReport,
+    GetAllCustomers,
+    getcustomer,
+    createcustomer,
+    deletecustomer,
+    updatecustomer,
+    customerpassword,
+    successcustomer,
+    logincustomer,
     createIncidentReport,
     loginstaff,
     incidenthistory,
@@ -19,7 +19,12 @@ import {
     RegisterIncident,
     RegisterNok,
     RegisterVehicle,
-    RegisterApp
+    RegisterApp,
+    payGate,
+    show_receipt,
+    prepay,
+    claimAmount,
+    GetApplicationId
 } from './database.js'
 import cookieParser from 'cookie-parser';
 
@@ -41,7 +46,7 @@ app.get("/customers", async (req, res) => {
     try {
         const customers = await GetAllCustomers();
         res.status(200).json({ data: customers });
-    
+
     } catch (error) {
         console.error("Error fetching customers:", error);
         res.status(500).json({ error: "An error occurred while fetching customers" });
@@ -77,6 +82,7 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ error: "An error occurred while logging in" });
     }
 });
+
 app.post("/stafflogin", async (req, res) => {
     try {
         const { Staff_Email, Password } = req.body;
@@ -120,7 +126,7 @@ app.get("/customer", async (req, res) => {
         }
 
 
-        res.status(200).json({data:customer});
+        res.status(200).json({ data: customer });
     } catch (error) {
         console.error("Error fetching customer:", error);
         res.status(500).json({ error: "An error occurred while fetching customer" });
@@ -439,7 +445,7 @@ app.put("/incidents/:Id", async (req, res) => {
 //     try {
 //         const customer = await getcustomer(userId);
 //         if(!customer) throw "Customer not found";
-        
+
 //         console.log('customer:', customer);
 //         res.json({ data: customer });
 //     } catch(err) {
@@ -447,18 +453,18 @@ app.put("/incidents/:Id", async (req, res) => {
 //     }
 // });
 
-app.get('/incidenthistory',async (req,res)=>{
-    try{
+app.get('/incidenthistory', async (req, res) => {
+    try {
         const result = await incidenthistory();
-        if(!result) throw "History Not Found";
-        res.status(200).json({data:result});
-    }catch(error){
-        res.status(500).json({ error:"An error occured" });
+        if (!result) throw "History Not Found";
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(500).json({ error: "An error occured" });
     }
 })
 
 app.post('/update-status', async (req, res) => {
-    const {appId, status} = req.body;
+    const { appId, status } = req.body;
     try {
         const results = await UpdateApplicationStatus(appId, status);
         res.json({ success: true, message: `Application status updated to ${status}` });
@@ -467,81 +473,84 @@ app.post('/update-status', async (req, res) => {
     }
 })
 
+
+
 app.get('/get-receipts', async (req, res) => {
-    
+
     const id = req.cookies.userId;
 
     try {
         const result = await GetReceipts(id);
-        
 
-        res.status(200).json({data:result}); // Sending back the data as JSON
+
+        res.status(200).json({ data: result }); // Sending back the data as JSON
 
     } catch (error) {
         console.error("Database error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 })
-app.get('/get-policies',async (req,res)=>{
+app.get('/get-policies', async (req, res) => {
     const id = req.cookies.userId;
-    try{
+    try {
         const result = await Getpolicies(id);
-        res.status(200).json({data:result})
+        res.status(200).json({ data: result })
 
-    }catch(error){
-        res.status(500).json({error:"This is a server error"})
+    } catch (error) {
+        res.status(500).json({ error: "This is a server error" })
     }
 })
-app.post('/register-incident',async (req,res)=>{
+app.post('/register-incident', async (req, res) => {
     const id = req.cookies.userId;
-    try{
-        const{
+    try {
+        const {
             Vehicle_Number, Incident_Type, Incident_Date, Description
-        }=req.body;
+        } = req.body;
 
-        
+
         if (!Vehicle_Number || !Incident_Type || !Incident_Date || !Description) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const result  = await RegisterIncident(Vehicle_Number,Incident_Type, Incident_Date, Description,id);
+        const result = await RegisterIncident(Vehicle_Number, Incident_Type, Incident_Date, Description, id);
         res.status(200).send(``);
-    }catch(error){
-        res.status(500).json({error:"This is server error"})
+    } catch (error) {
+        res.status(500).json({ error: "This is server error" })
     }
 })
-app.post('/register-nok',async (req,res)=>{
+app.post('/register-nok', async (req, res) => {
     const id = req.cookies.userId;
     const application_id = req.cookies.application_Id
-    try{
-        const{
+    try {
+        const {
             Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status
-        }=req.body;
+        } = req.body;
 
-        
-        if ( !Nok_Id || ! Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || ! Nok_Marital_Status || !id) {
+
+        if (!Nok_Id || !Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status || !id) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const result  = await RegisterNok(Nok_Id, Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status, id,application_id,agreement_id);
+        const result = await RegisterNok(Nok_Id, Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status, id, application_id, agreement_id);
         res.status(200).json({});
-    }catch(error){
-        res.status(500).json({error:"This is server error"})
+    } catch (error) {
+        res.status(500).json({ error: "This is server error" })
     }
 })
-app.post('/register-vehicle',async (req,res)=>{
-    const id = req.cookies.userId;
-    try{
-        const{
-            Vehicle_Registration_Number, Vehicle_Value, Vehicle_Type, Vehicle_Manufacturer, Vehicle_Engine_Number, Vehicle_Chasis_Number,Vehicle_Model_Number
-        }=req.body;
 
-        
+app.post('/register-vehicle', async (req, res) => {
+    const id = req.cookies.userId;
+    try {
+        const {
+            Vehicle_Registration_Number, Vehicle_Value, Vehicle_Type, Vehicle_Manufacturer, Vehicle_Engine_Number, Vehicle_Chasis_Number, Vehicle_Model_Number
+        } = req.body;
+
+
         // if ( !Nok_Id || ! Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || ! Nok_Marital_Status || !id) {
         //     return res.status(400).json({ error: "Missing required fields" });
         // }
 
-        const result  = await RegisterVehicle(Vehicle_Registration_Number,
+        const result = await RegisterVehicle(Vehicle_Registration_Number,
             Vehicle_Value,
             Vehicle_Type,
             Vehicle_Manufacturer,
@@ -549,51 +558,102 @@ app.post('/register-vehicle',async (req,res)=>{
             Vehicle_Chasis_Number,
             Vehicle_Model_Number,
             id);
-            if (result.affectedRows > 0) {
-                // Setting the cookie with the vehicle value
-                res.cookie('Vehicle_Value', Vehicle_Value, {
-                    httpOnly: true, // Cookie cannot be accessed by JavaScript
-                    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds // SameSite policy
-                });
-                res.cookie('Vehicle_Registration_Number', Vehicle_Registration_Number, {
-                    httpOnly: true,
-                    maxAge: 60 * 60 * 1000, // 1 hour
-                });
-        res.status(200).json({ data: result });
-            }
-      //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
-    }catch(error){
-        res.status(500).json({error:"This is server error"})
+        if (result.affectedRows > 0) {
+            // Setting the cookie with the vehicle value
+            res.cookie('Vehicle_Value', Vehicle_Value, {
+                httpOnly: true, // Cookie cannot be accessed by JavaScript
+                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds // SameSite policy
+            });
+            res.cookie('Vehicle_Registration_Number', Vehicle_Registration_Number, {
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000, // 1 hour
+            });
+            res.status(200).json({ data: result });
+        }
+        //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
+    } catch (error) {
+        res.status(500).json({ error: "This is server error" })
     }
 })
-app.post('/register-app',async (req,res)=>{
-    const id = req.cookies.userId;
-    const Vehicle_Registration_Number =  req.cookies.Vehicle_Registration_Number;
-    try{
-        const{
-             Product_Id, Coverage_Level
-        }=req.body;
 
-        
+app.post('/register-app', async (req, res) => {
+    const id = req.cookies.userId;
+    const Vehicle_Registration_Number = req.cookies.Vehicle_Registration_Number;
+    try {
+        const {
+            Product_Id, Coverage_Level
+        } = req.body;
+
+
         // if ( !Nok_Id || ! Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || ! Nok_Marital_Status || !id) {
         //     return res.status(400).json({ error: "Missing required fields" });
         // }
 
-        const result  = await RegisterApp(Vehicle_Registration_Number, Product_Id, Coverage_Level,
-            id);
-            if (result.affectedRows > 0) {
-                // Setting the cookie with the vehicle value
-                res.cookie(' Application_Id',  Application_Id, {
-                    httpOnly: true, // Cookie cannot be accessed by JavaScript
-                    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds // SameSite policy
-                });
-        res.status(200).json({ data: result });
-            }
-      //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
-    }catch(error){
-        res.status(500).json({error:"This is server error"})
+        const result1 = await RegisterApp(Vehicle_Registration_Number, Product_Id, Coverage_Level, id);
+        const result = await GetApplicationId(Vehicle_Registration_Number, Product_Id, Coverage_Level, id);
+        if (result1.affectedRows > 0) {
+            // Setting the cookie with the vehicle value
+            res.cookie('Application_Id', result.Application_Id, {
+                httpOnly: true, // Cookie cannot be accessed by JavaScript
+                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds // SameSite policy
+            });
+            res.status(200).json({ data: result });
+        }
+        //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
+    } catch (error) {
+        res.status(500).json({ error: "This is server error " + error })
     }
 })
+
+app.get('/pay', async (req, res) => {
+    const id = req.cookies.userId;
+    try {
+        const result = await payGate(id);
+        if (result.length == 0) throw "Nothing Found"
+        res.status(200).json({ data: result[0] });
+    } catch (error) {
+        res.status(500).json({ error: "This is Server Error" })
+    }
+
+})
+
+app.get('/showReceipt', async (req, res) => {
+    const id = req.cookies.userId;
+    try {
+        const result = await show_receipt(id);
+        if (result.length == 0) throw "Nothing Found"
+        res.status(200).json({ data: result[0] });
+    } catch (error) {
+        res.status(500).json({ error: "This is Server Error" })
+    }
+
+})
+
+app.post("/insert_prepay", async (req, res) => {
+    const id = req.cookies.userId;
+
+    try {
+        const data = await prepay(id);
+        res.status(200).json({});
+    } catch (error) {
+        res.status(500).json({ error: "This is Server Error" })
+    }
+})
+app.post("/amount-claim", async (req, res) => {
+    const id = req.cookies.userId;
+    const app_id = req.cookies.Application_Id;
+    try {
+        const {
+            inc_id,
+            claim_amt
+        } = req.body;
+        const result = await claimAmount(id, app_id, inc_id, app_id);
+        res.status(200).send(``);
+    } catch (error) {
+        res.status(500).json({ error: "This is Server Error" })
+    }
+})
+
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something broke!')

@@ -6,6 +6,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.app-form');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Retrieving individual form values
+                const productId = document.querySelector('[name="product-id"]').value;
+                const coverageLevel = document.querySelector('[name="coverage-lvl"]').value;
+
+                // Constructing data to send to the server with explicit fields
+                const data = JSON.stringify({
+                    Product_Id: productId,
+                    Coverage_Level: coverageLevel
+                });
+
+                try {
+                    const response = await fetch('/register-app', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: data
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        // Handle success (e.g., displaying a success message or redirecting)
+                        console.log('Success:', result);
+                        alert('Application submitted successfully!');
+                    } else {
+                        throw new Error('Failed to submit application');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error submitting application');
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <header>

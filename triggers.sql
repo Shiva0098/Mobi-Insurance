@@ -7,7 +7,9 @@ BEGIN
     DECLARE Coverage_Amount INT;
     DECLARE Description VARCHAR(100);
     DECLARE curDate DATE; 
-    set curDate = CURDATE(); 
+    set curDate = CURDATE();
+    SET SQL_SAFE_UPDATES = 0;
+ 
     IF Coverage_Level = 'HIGH' THEN
         SET Description = 'ALL TYPES OF ACCIDENTS, MAINTENANCE, DAMAGES ARE COVERED';
         SET Coverage_Amount = 0.9 * Vehicle_Value;
@@ -19,23 +21,40 @@ BEGIN
         SET Coverage_Amount = 0.55 * Vehicle_Value;
     END IF;
     insert into quote values (NULL,curDate,curDate,DATEADD(year,1,curDate),NULL,Product_Id,Coverage_Level,Coverage_Amount,customer_id);
+	SET SQL_SAFE_UPDATES = 1;
+
 END $$
 
 DELIMITER ;
 
+
 DELIMITER $$
 
-CREATE PROCEDURE createPREMIUM_PAYMENT(IN customer_id BIGINT, Application_Id BIGINT, Payment_status BOOL)
+CREATE PROCEDURE createPREMIUM_PAYMENT(IN customer_id BIGINT, Payment_status BOOL)
 BEGIN
-	DECLARE Amount INT;
-	DECLARE coverageLevel VARCHAR(20);
+    DECLARE AppId BIGINT;
+    DECLARE Amount INT;
+    DECLARE coverageLevel VARCHAR(20);
     DECLARE vehiAmount INT;
+
+    SET AppId = (SELECT MAX(Application_Id) 
+                 FROM APPLICATION 
+                 WHERE Cust_ID = customer_id);
+	SET SQL_SAFE_UPDATES = 0;
+
     IF Payment_status THEN
-        
-        SELECT Vehicle_Value INTO vehiAmount FROM VEHICLE 
-        WHERE Vehicle_Id = (SELECT Vehicle_Id FROM APPLICATION WHERE Application_Id = Application_Id);
-        SELECT Coverage_Level INTO coverageLevel FROM APPLICATION WHERE Application_Id = Application_Id;
-        
+        SELECT Vehicle_Value INTO vehiAmount 
+        FROM VEHICLE 
+        WHERE Vehicle_Id = (SELECT MAX(Vehicle_Id) 
+                            FROM APPLICATION 
+                            WHERE Application_Id = AppId
+                            LIMIT 1);
+
+        SELECT Coverage_Level INTO coverageLevel 
+        FROM APPLICATION 
+        WHERE Application_Id = AppId 
+        LIMIT 1;
+
         IF coverageLevel = 'HIGH' THEN
             SET Amount = 0.9 * vehiAmount;
         ELSEIF coverageLevel = 'MEDIUM' THEN
@@ -44,20 +63,32 @@ BEGIN
             SET Amount = 0.55 * vehiAmount;
         END IF;
 
-        INSERT INTO PREMIUM_PAYMENT(Policy_Number, Premium_Payment_Amount, Premium_Payment_Date, Application_Id, Cust_Id) VALUES
-            ((SELECT Product_Id FROM APPLICATION WHERE Application_Id = Application_Id), Amount, CURDATE(), Application_Id, customer_id);
+        INSERT INTO PREMIUM_PAYMENT(Policy_Number, Premium_Payment_Amount, Premium_Payment_Date, Application_Id, Cust_Id) 
+        VALUES (
+            (SELECT Product_Id 
+             FROM APPLICATION 
+             WHERE Application_Id = AppId 
+             LIMIT 1), 
+            Amount, 
+            CURDATE(), 
+            AppId, 
+            customer_id);
 
-        UPDATE APPLICATION
-            SET Application_Status = 'ACCEPTED'
-            WHERE Application_Id = Application_Id;
+        UPDATE APPLICATION 
+        SET Application_Status = 'ACCEPTED' 
+        WHERE Application_Id = AppId;
+
     ELSE
-        UPDATE APPLICATION
-            SET Application_Status = 'REJECTED'
-            WHERE Application_Id = Application_Id;
+        UPDATE APPLICATION 
+        SET Application_Status = 'REJECTED' 
+        WHERE Application_Id = AppId;
     END IF;
+	SET SQL_SAFE_UPDATES = 1;
+
 END $$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -73,16 +104,16 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE TRIGGER updatePrePay
-AFTER INSERT ON RECEIPT
-FOR EACH ROW
-BEGIN
-    UPDATE PREMIUM_PAYMENT
-        SET Receipt_Id = NEW.Receipt_Id
-        WHERE Premium_Payment_Id = NEW.Premium_Payment_Id;
-END $$
+-- CREATE TRIGGER updatePrePay
+-- AFTER INSERT ON RECEIPT
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE PREMIUM_PAYMENT
+--         SET Receipt_Id = NEW.Receipt_Id
+--         WHERE Premium_Payment_Id = NEW.Premium_Payment_Id;
+-- END $$
 
-DELIMITER ;
+-- DELIMITER ;
 
 
 DELIMITER $$
@@ -143,12 +174,12 @@ AFTER UPDATE ON CLAIM
 FOR EACH ROW
 BEGIN
     IF NEW.Claim_Status = 'ACCEPTED' THEN
-		set @id = (select Application_Id from INSURANCE_POLICY_COVERAGE IPC where new.Agreement_Id=IPC.Agreement_Id);
+		set @id = (select MAX(Application_Id) from INSURANCE_POLICY_COVERAGE IPC where new.Agreement_Id=IPC.Agreement_Id);
         set @vehical = (select Vehicle_Id from APPLICATION where @id = Application_Id);
         INSERT INTO CLAIM_SETTLEMENT (Vehicle_Id, Date_Settled, Amount_Paid, Coverage_Id, Claim_Id, Cust_Id)
         VALUES (@vehical, CURDATE(), NEW.Claim_Amount, 'SomeCoverageId', NEW.Claim_Id, NEW.Cust_Id);
 
-        set @id = (select Coverage_Id from INSURANCE_POLICY_COVERAGE IPC where new.Agreement_Id=IPC.Agreement_Id);
+        set @id = (select MAX(Coverage_Id) from INSURANCE_POLICY_COVERAGE IPC where new.Agreement_Id=IPC.Agreement_Id);
 
         UPDATE COVERAGE
             SET Coverage_Amount = Coverage_Amount - NEW.Claim_Amount
@@ -190,24 +221,26 @@ CREATE TRIGGER updateClaim
 AFTER UPDATE ON INCIDENT_REPORT
 FOR EACH ROW
 BEGIN
-    DECLARE claim_amount INT;
-    DECLARE coverage_amount INT;
-    DECLARE coverage_id BIGINT;
+    DECLARE claimAmt INT;  -- Declare claimAmt
+    DECLARE covAmt INT;  -- Declare covAmt
+    DECLARE covId BIGINT;  -- Declare covId
+    DECLARE claimId BIGINT;  -- Declare claimId
 
     IF NEW.Incident_Report_Status = 'ACCEPTED' THEN
-        SET @claim_id = (SELECT Claim_ID FROM CLAIM WHERE Incident_Id = OLD.Incident_Id);
-        SET claim_amount = (SELECT Claim_Amount FROM CLAIM WHERE Claim_Id = @claim_id);
+        SET claimId = (SELECT Claim_ID FROM CLAIM WHERE Incident_Id = OLD.Incident_Id);
+        SET claimAmt = (SELECT Claim_Amount FROM CLAIM WHERE Claim_Id = claimId);
 
-        SET coverage_id = (SELECT Coverage_Id FROM INSURANCE_POLICY_COVERAGE WHERE Agreement_id = (
-            select Agreement_id from CLAIM Where Claim_ID=@claim_id
+        SET covId = (SELECT Coverage_Id FROM INSURANCE_POLICY_COVERAGE WHERE Agreement_id = (
+            SELECT Agreement_id FROM CLAIM WHERE Claim_ID = claimId
         ));
-        SET coverage_amount = (SELECT Coverage_Amount FROM COVERAGE WHERE Coverage_Id = coverage_id);
+        SET covAmt = (SELECT Coverage_Amount FROM COVERAGE WHERE Coverage_Id = covId);
 
-      IF claim_amount <= NEW.Incident_Cost AND claim_amount <= coverage_amount THEN
-    UPDATE CLAIM SET Claim_Status = 'ACCEPTED' WHERE Incident_Id = OLD.Incident_Id;
-ELSE
-    UPDATE CLAIM SET Claim_Status = 'REJECTED' WHERE Incident_Id = OLD.Incident_Id;
-END IF;
+        -- Correct the column name
+        IF claimAmt <= NEW.Incident_Cost AND claimAmt <= covAmt THEN
+            UPDATE CLAIM SET Claim_Status = 'ACCEPTED' WHERE Incident_Id = OLD.Incident_Id;
+        ELSE
+            UPDATE CLAIM SET Claim_Status = 'REJECTED' WHERE Incident_Id = OLD.Incident_Id;
+        END IF;
 
     END IF;
 END $$
@@ -257,6 +290,8 @@ CREATE TRIGGER updateRenewable
 AFTER UPDATE ON APPLICATION
 FOR EACH ROW
 BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+
     IF NEW.Application_Status = 'ACCEPTED' THEN
         UPDATE POLICY_RENEWABLE
             SET Policy_Renewable_Status = 'RENEWED'
@@ -268,6 +303,7 @@ BEGIN
             SET Application_Id = NULL
             WHERE NewApplication_Id = NEW.Application_Id;
     END IF;
+	SET SQL_SAFE_UPDATES = 1;
 END $$
 
 DELIMITER ;

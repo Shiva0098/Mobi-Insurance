@@ -1,55 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="confirm.css">
+    <link rel="stylesheet" href="show-application.css">
+    <!-- <link rel="stylesheet" href="../header.css"> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
+    
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="icon">
                 <!-- <img src ="2.png"class = "companylogo"> -->
-                <h2 class="logo">Mobi</h2>  
-          </div>
-
+                <h2 class="logo">Logo</h2>
+            </div>
 
             <div class="menu">
                 <ul>
                     <li><a href="#">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICES</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
                     <li><a href="#">CONTACT</a></li>
                 </ul>
-            </div>  
-
+                <button class="logout">Log Out</button>
+            </div>
         </div> 
     </header>
+
     <main>
-        <div class="search">
-            <input class="srch" type="search" name="" placeholder="Search Customer">
-            <a href="#"> <button class="btn">Search</button></a>
-        </div>
-    
-        <table class="application-table">
+        <table class="products-table">
             <thead>
-                <th class="app-id">Application  Id</th>
-                <th class="app-id">Customer Id</th>
-                <th class="app-id">Vehicle Id</th>
-                <th class="app-id ">Application Status</th>
-                <th class="app-state">Coverage</th>
+                <th>Product Number</th>
+                <th>Company Name</th>
+                <th>Product Price</th>
+                <th>Product Type</th>
             </thead>
             <tbody>
-                <tr>
-                    <td class="app-id-info">1</td>
-                    <td class="app-info"> 2</td>
-                    <td class="app-state-btn">2</td>
-                    <td class="app-info"> Pending</td>
-                    <td class="app-info"> abc </td>
-                </tr>
+                
             </tbody>
         </table>
+
+        <form action="" class="app-form" id="applicationForm">
+            <h2>Application Form</h2>
+            <div>
+                <label for="product-id">Product ID:</label>
+                <input id="productId" type="number">
+            </div>
+            <div>
+                <label for="coverage-lvl">Coverage Level:</label>
+                <select name="coverage-lvl:" id="coverageLevel">
+                    <option value="High">High</option>
+                    <option value="Med">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submit-btn">Submit</button>
+
+        </form>
     </main>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('applicationForm');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                // Retrieving individual form values using getElementById
+                const productId = document.getElementById('productId').value;
+                const coverageLevel = document.getElementById('coverageLevel').value;
+
+                // Constructing data to send to the server with explicit fields
+                const data = JSON.stringify({
+                    Product_Id: productId,
+                    Coverage_Level: coverageLevel
+                });
+
+                try {
+                    const response = await fetch('/register-app', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: data
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        
+                        alert('Application submitted successfully!');
+                        window.location.href = "/payment_gateway.html";
+                    } else {
+                        throw new Error('Failed to submit application');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error submitting application');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

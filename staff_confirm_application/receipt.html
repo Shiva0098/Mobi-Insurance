@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Ensure consistent padding and border handling */
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            background-attachment: fixed; /* Fixed background */
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between; /* Space out menu items */
+            align-items: center; /* Align items vertically */
+            padding: 10px 20px;
+            background-color: #333; /* Dark background */
+            color: white; /* White text */
+        }
+
+        .navbar .menu ul {
+            list-style: none; /* Remove list markers */
+            display: flex; /* Horizontal layout */
+            gap: 15px; /* Space between menu items */
+        }
+
+        .navbar .menu a {
+            text-decoration: none; /* Remove underlines */
+            color: white; /* White text */
+            transition: color 0.3s; /* Smooth hover transition */
+        }
+
+        .navbar .menu a:hover {
+            color: #ff7200; /* Orange color on hover */
+        }
+
+        .logout {
+            background: none; /* Transparent background */
+            border: none; /* No border */
+            color: white; /* White text */
+            cursor: pointer; /* Pointer cursor */
+            font-size: 1em; /* Standard font size */
+            padding: 10px; /* Padding for spacing */
+        }
+
+        .gen {
+            border: 2px solid #ff7200;
+            border-radius: 15px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+            width: 60%; /* Limit width */
+            text-align: center; /* Center-align the text */
+            margin-top: 20px; /* Space from the top */
+        }
+
+        .data {
+            padding: 10px;
+            font-size: 1.2em; /* Larger font for readability */
+            text-align: left; /* Align text to the left */
+        }
+
+        .data div {
+            display: inline-block;
+            padding: 10px;
+        }
+
+        .data-title {
+            font-weight: bold; /* Bold text */
+            color: #ff7200; /* Orange color for titles */
+        }
+
+        .receipt-value {
+            color: white; /* White text for data */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Logo</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button> <!-- Log Out button aligned to the rightmost -->
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="gen">
+            <h2>Receipt</h2> <!-- Header for the receipt -->
+            <div class="data">
+                <div class="data-title">Receipt ID:</div> <!-- Title for the Receipt ID -->
+                <div class="receipt-value" id="data-0"></div> <!-- Value placeholder -->
+            </div>
+            
+            <div class="data">
+                <div class="data-title">Payment ID:</div> <!-- Title for the Payment ID -->
+                <div class="receipt-value" id="data-2"></div> <!-- Value placeholder -->
+            </div>
+            
+            <div class="data">
+                <div class="data-title">Cost:</div> <!-- Title for the cost -->
+                <div class="receipt-value" id="data-3"></div> <!-- Placeholder for cost -->
+            </div>
+            
+            <div class="data">
+                <div class="data-title">Date:</div> <!-- Title for the date -->
+                <div class="receipt-value" id="data-4"></div> <!-- Placeholder for date -->
+            </div>
+        </div>
+    </main>
+    <script>
+        // Ensure the DOM is fully loaded before running the script
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the data from the endpoint
+            fetch('/showReceipt')
+            .then(res => res.json())
+            .then((res)=>{
+                // Update the elements with the received data
+                document.getElementById('data-0').innerText = res.data.Receipt_Id;
+                document.getElementById('data-2').innerText = res.data.Premium_Payment_Id;
+                document.getElementById('data-3').innerText = res.data.Cost;
+                document.getElementById('data-4').innerText = res.data.PayTime;
+            })
+            .catch(console.error);
+        });
+    </script>
+    
+</body>
+</html>
