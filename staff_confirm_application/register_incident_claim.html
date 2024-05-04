@@ -11,18 +11,22 @@
     <header>
         <div class="navbar">
             <div class="icon">
-                <h2 class="logo">Logo</h2>
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
             </div>
+
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICES</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
+                <button class="logout">Log Out</button>
             </div>
         </div> 
     </header>
+
 
     <main>
         <div class="search">
@@ -30,7 +34,7 @@
             <a href="#"> <button class="btn">Search</button></a>
         </div>
 
-        <h1>Incident Report</h1>
+        <h1 style="color:white">Incident Report</h1>
         <form id="incident-form"> <!-- Form for incident report -->
             <table class="incident-table">
                 <thead>
@@ -88,8 +92,10 @@
                     throw new Error(`Error registering incident: ${response.status} ${response.statusText}`);
                 }
     
-                // Display success message or take appropriate action
+                if(response.ok){
                 alert("Incident registered successfully!");
+                window.location.href = "claim_amount.html";
+            }
                 // Optionally, redirect or clear the form
                 form.reset(); // Clear the form
             } catch (error) {

@@ -187,9 +187,8 @@ CREATE TABLE QUOTE (
     Valid_From_Date DATE NOT NULL,
     Valid_Till_Date DATE NOT NULL,
     Description VARCHAR(100) NULL,
-    Product_Id VARCHAR(20) NOT NULL,
+    Product_Id BIGINT NOT NULL,
     Coverage_Level VARCHAR(20) NOT NULL,
-    Application_Id BIGINT NOT NULL,
     Cust_Id BIGINT NOT NULL,
     CONSTRAINT XPKQUOTE_3 PRIMARY KEY (Quote_Id, Application_Id, Cust_Id),
     CONSTRAINT R_94 FOREIGN KEY (Application_Id, Cust_Id) REFERENCES APPLICATION (Application_Id, Cust_Id)
@@ -219,17 +218,16 @@ CREATE TABLE STAFF (
 CREATE UNIQUE INDEX XPKSTAFF_9 ON STAFF (Staff_Id ASC, Company_Name ASC);
 
 CREATE TABLE NOK (
-    Nok_Id VARCHAR(20) NOT NULL,
+    Nok_Id BIGINT NOT NULL AUTO_INCREMENT,
     Nok_Name VARCHAR(20) NULL,
     Nok_Address VARCHAR(20) NULL,
     Nok_Phone_Number BIGINT NULL,
     Nok_Gender VARCHAR(7) NULL,
     Nok_Marital_Status ENUM('single', 'married', 'divorsed') DEFAULT 'single',
-    Agreement_id BIGINT NOT NULL,
     Application_Id BIGINT NOT NULL,
     Cust_Id BIGINT NOT NULL,
-    CONSTRAINT XPKNOK_14 PRIMARY KEY (Nok_Id, Agreement_id, Application_Id, Cust_Id),
-    CONSTRAINT R_99 FOREIGN KEY (Agreement_id, Application_Id, Cust_Id) REFERENCES INSURANCE_POLICY (Agreement_id, Application_Id, Cust_Id)
+    CONSTRAINT XPKNOK_14 PRIMARY KEY (Nok_Id, Application_Id, Cust_Id),
+    CONSTRAINT R_99 FOREIGN KEY ( Application_Id, Cust_Id) REFERENCES APPLICATION (Application_Id, Cust_Id)
 );
 
 CREATE UNIQUE INDEX XΡΚΝΟΚ_14 ON NOK (Nok_Id ASC, Agreement_id ASC, Application_Id ASC, Cust_Id ASC);

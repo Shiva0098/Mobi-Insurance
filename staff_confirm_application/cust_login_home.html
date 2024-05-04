@@ -35,6 +35,18 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
+        #policy_id{
+            margin-top: 80px;
+            margin-left: 635px;
+           padding:40px;
+           background-color: #eaff00;
+           border-radius: 13px;
+           font-size: larger;
+           font-family: Arial, Helvetica, sans-serif;
+           
+
+        }        
     </style>
 </head>
 
@@ -42,14 +54,13 @@
     <header>
         <div class="navbar">
             <div class="icon">
-                <h2 class="logo">Logo</h2>
+                <h2 class="logo">Mobi</h2>
             </div>
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
                     <li><a href="#">CONTACT</a></li>
                 </ul>
                 <button class="logout">Log Out</button>
@@ -59,16 +70,24 @@
 
     <main>
         <div class="greet">
+
+    
+
             <div class="welc">Welcome,</div>
-            <div class="First-name">Firstname</div>
+            <div class="First-name" id="firstname"></div>
         </div>
         <div class="options">
             <a href="/cust-vehicles.html">
                 <button>My Vehicles</button>
             </a>
-            <a href="incidenthistory.html">
-                <button>Incidents</button>
-            </a>
+           
+            <div class="dropdown">
+            <button>Incidents</button>
+            <div class="dropdown-content">
+                <a href="register_incident_claim.html">Register Incident </a>
+                <a href="incidenthistory.html"> Incident History Report</a>
+            </div>
+        </div>
             <a href="/viewReceipt.html">
                 <button>Receipts</button>
             </a>
@@ -79,11 +98,35 @@
                 <div class="dropdown-content">
                     <a href="viewPolicy.html">View Policies</a>
                     <a href="register_vehicle.html">Create Policy</a>
-                    <a href="">Policy Renewal</a>
+                    
+                       
+                    
                 </div>
             </div>
+
+            <a href="claim_history.html">
+                <button>Claim History</button>
+            </a>
         </div>
-    </main>
+        <a href = "policy_renew_details.html">
+            <button id="policy_id">Policy-Renewal</button>
+        </a> 
+        </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Fetch the first name
+                fetch("/firstname")
+                .then(res => res.json())
+                .then(data => {
+                    // Update the content with the fetched first name
+                    const firstNameElement = document.getElementById('firstname');
+                    if (firstNameElement) {
+                        firstNameElement.textContent = data.result.Cust_FName; // Assuming 'firstName' is the key in the fetched data
+                    }
+                })
+                .catch(console.error);
+            });
+        </script>
     
 </body>
 </html>

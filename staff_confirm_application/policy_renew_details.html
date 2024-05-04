@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="staff-incident.css">
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Table</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="cust_login_home.html">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+
+    <main>
+        <div class="search">
+            <input class="srch" type="search" placeholder="Search Customer">
+            <button class="btn" id="search-button">Search</button>
+        </div>
+
+        <table class="incident-table">
+            <thead>
+                <tr>
+                    <th class="inc-id">Incident ID</th>
+                    <th class="inc-date">Date of Renewal</th>
+                    <th class="inc-agreement">Agreement ID</th>
+                    <th class="inc-vehId">Vehicle_Id</th>
+                    <th class="inc-customer">Customer ID</th>
+                    <th class="inc-action">Action</th>
+                </tr>
+            </thead>
+            <tbody id="incident-body">
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        async function setCookies(agreementId, vehicleId) {
+            try {
+                const response = await fetch(`/set_cookies`, {
+                    method: 'POST', // Using POST to send data
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        agreementId,
+                        vehicleId
+                    })
+                });
+
+                if (response.ok) {
+                    window.location.href = `/show_application_1.html`; // Redirect to another page if successful
+                } else {
+                    console.error("Failed to set cookies:", response.statusText);
+                }
+            } catch (error) {
+                console.error("An error occurred while setting cookies:", error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const tableBody = document.getElementById('incident-body');
+
+            try {
+                const response = await fetch('/policy-renew');
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch incident data: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const renewables = data.data;
+
+                tableBody.innerHTML = ''; // Clear existing content
+
+                renewables.forEach(item => {
+                    const row = `
+                        <tr>
+                            <td>${item.Policy_Renewable_Id}</td>
+                            <td>${new Date(item.Date_Of_Renewal).toLocaleDateString()}</td>
+                            <td>${item.Agreement_id}</td>
+                            <td>${item.Vehicle_Id}</td>
+                            <td>${item.Cust_Id}</td>
+                            <td>
+                                <button 
+                                    class="submit-button" 
+                                    onclick="setCookies(${item.Agreement_id}, ${item.Vehicle_Id})">
+                                    Renew
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+    </script>
+</body>
+</html>

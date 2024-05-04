@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { response } from 'express'
 import cors from 'cors';
 import {
     UpdateIncidentReport,
@@ -24,7 +24,15 @@ import {
     show_receipt,
     prepay,
     claimAmount,
-    GetApplicationId
+    CreateQuote,
+    successquote,
+    getrenewable,
+    RegisterAppRenew,
+    custvehicle,
+    cust_claim_his,
+    setVCookie,
+    getfname
+    //GetApplicationId
 } from './database.js'
 import cookieParser from 'cookie-parser';
 
@@ -36,7 +44,17 @@ app.use(express.json())
 app.use(cors({
     origin: '*'
 }));
+app.get("/firstname",async(req,res)=>{
+    const id = req.cookies.userId;
+    const result = await getfname(id);
+    res.status(200).json({result: result[0]});
+})
+app.get('/cust_claim_history', async (req,res)=>{
 
+    const id = req.cookies.userId;
+    const result = await cust_claim_his(id);
+    res.status(200).json({data:result});
+})
 app.get('/', (req, res) => {
     res.sendFile(import.meta.dirname + '/staff_confirm_application/index.html');
     // res.send('aaa');
@@ -241,7 +259,7 @@ app.get("/customer_success", async (req, res) => {
     <h2  class="logo"> Mobi</h2>
     <div>
         <a href="index.html" class="up_bar">HOME <id=home #home{margin-left:10px}></id></a>
-        <a href="#" class="up_bar">ABOUT</a>
+        <a href="about" class="up_bar">ABOUT</a>
         <a href="#" class="up_bar">SERVICE</a>
         
         <a href="#" class="up_bar">CONTACT</a>
@@ -251,7 +269,7 @@ app.get("/customer_success", async (req, res) => {
             
             
             <div class="container">
-                <h1>Customer Details</h1>
+                <h1 style="color: white">Customer Details</h1>
                 <div class="customer-details">
                     <div class="details">
                         <p><strong>Customer ID:</strong> ${customer[0].Cust_Id}</p>
@@ -361,7 +379,18 @@ app.delete("/customers/:id", async (req, res) => {
     }
 });
 
-
+app.get("/getCookieVehId/:id",async (req,res)=> {
+    const id = req.params.id;
+    try{
+        const results = await setVCookie(id);
+        //const result = results.data[0];
+        if(results.length>0){
+            res.cookie('vehId', results.Vehicle_Id, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
+        }
+    }catch(error){
+        console.log(error);
+    }
+})
 
 app.put("/password", async (req, res) => {
     try {
@@ -430,8 +459,8 @@ app.put("/incidents/:Id", async (req, res) => {
 
         res.status(200).send(``);
     } catch (error) {
-        console.error("Error creating customer:", error);
-        res.status(500).json({ error: "An error occurred while creating customer" });
+        console.error("Error creating customer:" + error);
+        res.status(500).json({ error: "An error occurred while creating customer" + error });
     }
 });
 
@@ -454,8 +483,9 @@ app.put("/incidents/:Id", async (req, res) => {
 // });
 
 app.get('/incidenthistory', async (req, res) => {
+    const id = req.cookies.userId;
     try {
-        const result = await incidenthistory();
+        const result = await incidenthistory(id);
         if (!result) throw "History Not Found";
         res.status(200).json({ data: result });
     } catch (error) {
@@ -500,41 +530,68 @@ app.get('/get-policies', async (req, res) => {
         res.status(500).json({ error: "This is a server error" })
     }
 })
+
 app.post('/register-incident', async (req, res) => {
-    const id = req.cookies.userId;
+    const userId = req.cookies.userId;
+
     try {
         const {
-            Vehicle_Number, Incident_Type, Incident_Date, Description
+            Vehicle_Number,
+            Incident_Type,
+            Incident_Date,
+            Description
         } = req.body;
-
 
         if (!Vehicle_Number || !Incident_Type || !Incident_Date || !Description) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const result = await RegisterIncident(Vehicle_Number, Incident_Type, Incident_Date, Description, id);
-        res.status(200).send(``);
+        res.cookie('Vehicle_Number', req.body.Vehicle_Number, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+        });
+
+        // Register the incident and get the Incident_Id
+        const { Incident_Id } = await RegisterIncident(
+            Vehicle_Number,
+            Incident_Type,
+            Incident_Date,
+            Description,
+            userId
+        );
+
+        // Set the cookie with the Incident_Id
+        res.cookie('Incident_Id', Incident_Id, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 1000, // 1 hour
+        });
+
+        
+
+        res.status(200).json({ success: true, message: 'Incident registered successfully', Incident_Id }); // Return success message
     } catch (error) {
-        res.status(500).json({ error: "This is server error" })
+        console.error("Error registering incident:", error); // Log the error
+        res.status(500).json({ error: "An internal server error occurred" }); // Return a 500 error response
     }
-})
+});
+
 app.post('/register-nok', async (req, res) => {
     const id = req.cookies.userId;
-    const application_id = req.cookies.application_Id
+    const application_id = req.cookies.Application_Id;
     try {
         const {
             Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status
         } = req.body;
 
 
-        if (!Nok_Id || !Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status || !id) {
+        if (!Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || !Nok_Marital_Status || !id) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const result = await RegisterNok(Nok_Id, Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status, id, application_id, agreement_id);
+        const result = await RegisterNok(Nok_Name, Nok_Address, Nok_Phone_Number, Nok_Gender, Nok_Marital_Status, id, application_id);
         res.status(200).json({});
     } catch (error) {
-        res.status(500).json({ error: "This is server error" })
+        res.status(500).json({ error: "This is server error " + error })
     }
 })
 
@@ -572,38 +629,87 @@ app.post('/register-vehicle', async (req, res) => {
         }
         //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
     } catch (error) {
-        res.status(500).json({ error: "This is server error" })
+        res.status(500).json({ error: "This is server error" + error })
     }
 })
+
 
 app.post('/register-app', async (req, res) => {
-    const id = req.cookies.userId;
-    const Vehicle_Registration_Number = req.cookies.Vehicle_Registration_Number;
+    const id = req.cookies.userId; // Get the user ID from cookies
+    const Vehicle_Registration_Number = req.cookies.Vehicle_Registration_Number; 
+
     try {
-        const {
-            Product_Id, Coverage_Level
-        } = req.body;
+        const { Product_Id, Coverage_Level } = req.body;
 
+        const { insertResult, Application_Id } = await RegisterApp(Vehicle_Registration_Number, Product_Id, Coverage_Level, id);
 
-        // if ( !Nok_Id || ! Nok_Name || !Nok_Address || !Nok_Phone_Number || !Nok_Gender || ! Nok_Marital_Status || !id) {
-        //     return res.status(400).json({ error: "Missing required fields" });
-        // }
-
-        const result1 = await RegisterApp(Vehicle_Registration_Number, Product_Id, Coverage_Level, id);
-        const result = await GetApplicationId(Vehicle_Registration_Number, Product_Id, Coverage_Level, id);
-        if (result1.affectedRows > 0) {
-            // Setting the cookie with the vehicle value
-            res.cookie('Application_Id', result.Application_Id, {
+        if (insertResult.affectedRows > 0) {
+            // Set the Application_Id cookie
+            res.cookie('Application_Id', Application_Id, {
                 httpOnly: true, // Cookie cannot be accessed by JavaScript
-                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds // SameSite policy
+                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
             });
-            res.status(200).json({ data: result });
+            res.cookie('Product_Id', req.body.Product_Id ,{
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000,
+            });
+
+            res.status(200).json({ success: true, message: 'Application registered successfully', Application_Id }); // Return success and Application_Id
+        } else {
+            throw new Error('Failed to register application');
         }
-        //  res.cookie('Vehicle_Value', results.Vehicle_Value, { httpOnly: true, maxAge: new Date(Date.now() + 60 * 60 * 1000) });
     } catch (error) {
-        res.status(500).json({ error: "This is server error " + error })
+        console.error('Error in /register-app:', error); // Log error
+        res.status(500).json({ error: "An internal server error occurred" }); // Send error response
     }
-})
+});
+
+app.post('/register-app-renew', async (req, res) => {
+    const id = req.cookies.userId; // Get the user ID from cookies
+    const VehId = req.cookies.vehicleId; 
+
+    try {
+        const { Product_Id, Coverage_Level } = req.body;
+
+        const { insertResult, Application_Id } = await RegisterAppRenew(VehId, Product_Id, Coverage_Level, id);
+
+        if (insertResult.affectedRows > 0) {
+            // Set the Application_Id cookie
+            res.cookie('Application_Id', Application_Id, {
+                httpOnly: true, // Cookie cannot be accessed by JavaScript
+                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+            });
+            res.cookie('Product_Id', req.body.Product_Id ,{
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000,
+            });
+
+            res.status(200).json({ success: true, message: 'Application registered successfully', Application_Id }); // Return success and Application_Id
+        } else {
+            throw new Error('Failed to register application');
+        }
+    } catch (error) {
+        console.error('Error in /register-app:', error); // Log error
+        res.status(500).json({ error: "An internal server error occurred" }); // Send error response
+    }
+});
+
+
+app.post('/register-quote', async (req, res) => {
+    const { Product_Id, Coverage_Level } = req.body; // Get parameters from the query string
+    const id = req.cookies.userId;
+    const Vehicle_value = req.cookies.Vehicle_Value;
+
+    try {
+        const result = await CreateQuote(id, Vehicle_value, Product_Id, Coverage_Level);
+        res.status(200).json({ data: result });
+    } catch (error) {
+        res.status(500).json({ error: "This is a server error" + error});
+    }
+});
+
+
+
 
 app.get('/pay', async (req, res) => {
     const id = req.cookies.userId;
@@ -631,9 +737,10 @@ app.get('/showReceipt', async (req, res) => {
 
 app.post("/insert_prepay", async (req, res) => {
     const id = req.cookies.userId;
+    const prodId = req.cookies.Product_Id;
 
     try {
-        const data = await prepay(id);
+        const data = await prepay(id,prodId);
         res.status(200).json({});
     } catch (error) {
         res.status(500).json({ error: "This is Server Error" })
@@ -641,16 +748,113 @@ app.post("/insert_prepay", async (req, res) => {
 })
 app.post("/amount-claim", async (req, res) => {
     const id = req.cookies.userId;
-    const app_id = req.cookies.Application_Id;
+    const vehId = req.cookies.Vehicle_Number;
+    const inc_id = req.cookies.Incident_Id;
     try {
         const {
-            inc_id,
-            claim_amt
+            Claim_Amount
         } = req.body;
-        const result = await claimAmount(id, app_id, inc_id, app_id);
+        const result = await claimAmount(id, vehId, inc_id, Claim_Amount);
         res.status(200).send(``);
     } catch (error) {
-        res.status(500).json({ error: "This is Server Error" })
+        res.status(500).json({ error: "This is Server Error" + error})
+    }
+})
+
+app.get("/success_quote", async (req, res) => {
+    const id = req.cookies.userId;
+    try {
+
+        const quote = await successquote(id);
+
+
+        if (!quote) {
+            return res.status(404).json({ error: "quote not found" });
+        }
+
+        res.status(200).json({data: quote})
+        
+        
+    } catch (error) {
+        console.error("Error fetching quote:", error);
+        res.status(500).json({ error: "An error occurred while fetching quote" });
+    }
+});
+
+// app.get("/policy-renew", async (req, res) => {
+//     const id = req.cookies.userId;
+//     try {
+
+//         const renew = await getrenewable(id);
+
+
+//         if (!renew) {
+//             return res.status(404).json({ error: "renew not found" });
+//         }
+
+//         res.status(200).json({data: renew})
+        
+        
+//     } catch (error) {
+//         console.error("Error fetching renew:", error);
+//         res.status(500).json({ error: "An error occurred while fetching renew" });
+//     }
+// });
+
+
+app.get('/policy-renew', async (req, res) => {
+    const id = req.cookies.userId; // Retrieve user ID from cookies
+    try {
+        const renewables = await getrenewable(id); // Fetch renewable policies
+
+        if (!renewables || renewables.length === 0) {
+            return res.status(404).json({ error: "Renewable policy not found" });
+        }
+
+        // Set the cookie with the Agreement_id (you can set multiple cookies)
+        res.cookie('Agreement_id', renewables[0].Agreement_id, {
+            httpOnly: true, // Make it HTTP-only
+            maxAge: 60 * 60 * 1000, // 1 hour lifespan
+        });
+
+        // Return the data with the HTTP response
+        res.status(200).json({ data: renewables });
+        
+    } catch (error) {
+        console.error("Error fetching renew:", error);
+        res.status(500).json({ error: "An error occurred while fetching renewable policies" });
+    }
+});
+
+
+app.post('/set_cookies', (req, res) => {
+    const { agreementId, vehicleId } = req.body; // Extract data from the request body
+
+    try {
+        // Set the cookies
+        res.cookie('agreementId', agreementId, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
+        res.cookie('vehicleId', vehicleId, { httpOnly: true, maxAge: 3600000 });
+
+        res.status(200).send('Cookies set successfully'); // Success response
+    } catch (error) {
+        console.error("Error setting cookies:", error);
+        res.status(500).send('Failed to set cookies'); // Error response
+    }
+});
+
+app.get('/custvehicle-history', async (req, res) => {
+
+    const id = req.cookies.userId;
+
+    try {
+        const result = await custvehicle(id);
+
+
+        res.status(200).json({ data: result }); // Sending back the data as JSON
+
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Internal server error" + error });
     }
 })
 

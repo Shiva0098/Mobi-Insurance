@@ -2,61 +2,192 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="show-quote.css">
-    <!-- <link rel="stylesheet" href="../header.css"> -->
+    <link rel="stylesheet" href="header.css">
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
+    <style>
+        /* Basic CSS styling for the form */
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+
+        .app-form {
+            text-align: center;
+            max-width: 400px; /* Form maximum width */
+            margin: 50px auto; /* Center form horizontally */
+            padding: 20px; /* Form padding */
+            /* background-color: #f0f0f0; Light background */
+            backdrop-filter: blur(10px);
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+        }
+
+        .app-form h2 {
+            margin-bottom: 20px; /* Margin below heading */
+            color: #333; /* Dark text */
+        }
+
+        .app-form input, .app-form select {
+            width: 100%; /* Full width input */
+            padding: 10px; /* Padding for input */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            margin-bottom: 15px; /* Space between elements */
+        }
+
+        .app-form .submit {
+            background-color: #4CAF50; /* Green background */
+            color: #fff; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px 20px; /* Padding for button */
+            cursor: pointer; /* Change cursor to pointer */
+            transition: background-color 0.3s ease; /* Smooth hover transition */
+        }
+
+        .app-form .submit:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="icon">
                 <!-- <img src ="2.png"class = "companylogo"> -->
-                <h2 class="logo">Logo</h2>
+                <h2 class="logo">Mobi</h2>
             </div>
 
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
                     <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">DESIGN</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
                 <button class="logout">Log Out</button>
             </div>
         </div> 
     </header>
 
+
     <main>
         <table class="products-table">
             <thead>
-                <th>Product Number</th>
-                <th>Company Name</th>
-                <th>Product Price</th>
-                <th>Product Type</th>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Company Name</th>
+                    <th>Product Price</th>
+                    <th>Product Type</th>
+                </tr>
             </thead>
             <tbody>
-                
+                <tr>
+                    <td>1</td>
+                    <td>Company 1</td>
+                    <td>10,000</td>
+                    <td>Car Insurance</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Company 1</td>
+                    <td>100,000</td>
+                    <td>Truck Insurance</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Company 2</td>
+                    <td>50,000</td>
+                    <td>Bike Insurance</td>
+                </tr>
             </tbody>
         </table>
 
-        <form action="" class="app-form">
-            <h2>Quote Form</h2>
+        <form id="quoteForm" class="app-form" style="padding: 20px;"> <!-- Updated with form ID -->
+            <h2 style="color: white;">Quote Form</h2>
             <div>
-                <label for="product-id">Product ID:</label>
-                <input type="number">
+                <label for="product-id" style="padding: 20px;">Product ID:</label> <!-- Product ID input -->
+                <input id="productId" type="number" required style="max-width: 200px;"> <!-- Ensure input has ID and is required -->
             </div>
             <br>
             <div>
-                <label for="coverage-lvl">Coverage Level:</label>
-                <select name="coverage-lvl:" id="">
+                <label for="coverage-lvl">Coverage Level:</label> <!-- Coverage level selector -->
+                <select id="coverageLevel" required> <!-- Ensure it has an ID -->
                     <option value="High">High</option>
                     <option value="Med">Medium</option>
                     <option value="Low">Low</option>
                 </select>
             </div>
+            <br>
+            <button type="submit" class="submit">Submit</button> <!-- Improved submit button -->
         </form>
     </main>
+
+    <script defer>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('quoteForm');
+    
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+    
+                const productId = document.getElementById('productId').value;
+                const coverageLevel = document.getElementById('coverageLevel').value;
+    
+                try {
+                    // Construct the URL with query parameters;
+                    const response = await fetch("/register-quote", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+
+                        body :JSON.stringify( {
+                            Product_Id: productId,
+                            Coverage_Level: coverageLevel   
+                        })
+                        
+                    });
+    
+                    if (response.ok) {
+                        const jsonResponse = await response.json(); // Assuming the response is JSON
+                        alert('Quote registered successfully! ');
+                        window.location.href = "success_quote.html";
+                    } else {
+                        alert('Failed to register quote');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while registering the quote');
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>

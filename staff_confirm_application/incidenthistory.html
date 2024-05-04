@@ -2,26 +2,61 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="incidenthistory.css">
+    <link rel="stylesheet" href="header.css">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Incident History</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+
+    </style>
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="icon">
-                <h2 class="logo">Logo</h2>
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
             </div>
+
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
-                    <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><button class="HOME"onclick="gohome()">HOME</button></li>
+                    <li><button class="ABOUT"onclick="goabout()">ABOUT</button></li>
+                    <li><button class="SERVICE"onclick="goservice()">SERVICE</button></li>
+                    <li><button class="CONTACT"onclick="gocontact()">CONTACT</button></li>
                 </ul>
+                <button class="logout">Log Out</button>
             </div>
         </div> 
     </header>
+
 
     <main>
         <div class="search">
@@ -36,6 +71,7 @@
                     <th>Incident Type</th>
                     <th>Incident Date</th>
                     <th>Description</th>
+                    <th>Claim Status</th>
                 </tr>
             </thead>
             <tbody id="incident-history-body">
@@ -46,6 +82,19 @@
     </main>
 
     <script>
+        function gohome() {
+            window.location.href = "staff-home.html";
+        }
+        function goabout() {
+            window.location.href = "aboutus.html";
+        }
+        function gocontact() {
+            window.location.href = "contact.html";
+        }
+        function gocontact() {
+            window.location.href = "service.html";
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const response = await fetch('/incidenthistory', {
@@ -73,7 +122,9 @@
                         <td>${incident.Incident_Id}</td>
                         <td>${incident.Incident_Type}</td>
                         <td>${incident.Incident_Date}</td>
-                        <td>${incident.Incident_Report_Description}</td>
+                        <td>${incident.Description}</td>
+                        <td>${incident.Claim_Status}</td>
+                        
                     `; // Populate the row with incident details
                     
                     tableBody.appendChild(row); // Add the row to the table body

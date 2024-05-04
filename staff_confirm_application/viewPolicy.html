@@ -14,10 +14,9 @@
             </div>
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
                     <li><a href="#">CONTACT</a></li>
                 </ul>
             </div>
@@ -25,7 +24,7 @@
     </header>
 
     <main>
-        <h1>Policy Details</h1>
+        <h1 style="color: white;">Policy Details</h1>
         <table class="view-policy">
             <thead>
                 <tr>
@@ -34,7 +33,6 @@
                     <th>Policy No.</th>
                     <th class="date">Start Date</th>
                     <th class="date">Expiry Date</th>
-                    <th class="desc">Description</th>
                 </tr>
             </thead>
             <tbody id="policy-body"> <!-- Ensure this ID is unique and matches in JavaScript -->
@@ -69,12 +67,11 @@
                 data.forEach(policy => {
                     const row = `
                         <tr>
-                            <td>${policy.Agreement_Id}</td>
+                            <td>${policy.Agreement_id}</td>
                             <td>${policy.Application_Id}</td>
                             <td>${policy.Policy_Number}</td>
                             <td>${new Date(policy.Start_Date).toLocaleDateString()}</td> <!-- Format the date -->
                             <td>${new Date(policy.Expiry_Date).toLocaleDateString()}</td> <!-- Format the date -->
-                            <td>${policy.Term_Condition_Description}</td>
                         </tr>
                     `; // Build the row content with innerHTML
 

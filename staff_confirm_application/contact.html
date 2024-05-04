@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="header.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            background-color: #ff7200;
+            /* background-color: #fff; */
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo{
+
+            color:
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        .contact-info {
+            margin-bottom: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact-info p {
+            margin-bottom: 10px;
+            color: white;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .contact-info p strong {
+            color: white;
+        }
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Allow flex items to wrap to the next line */
+        }
+        .contact-method {
+            margin: 0 20px;
+            text-align: center;
+            flex: 1; /* Take up equal space within the flex container */
+        }
+        .contact-method img {
+            width: 60px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .contact-method p {
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="cust_login_home.html">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Contact Us</h1>
+            
+            <div class="contact-info">
+                <p><strong>Email:</strong> 22bcs044@iiitdwd.ac.in</p>
+                <p><strong>Helpline Number:</strong> +91 9113599022</p>
+                <p><strong>Address:</strong> IIIT DWD, Dharwad, India, 580009</p>
+            </div>
+    
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <a href="mailto:22bcs044@iiitdwd.ac.in">
+                        <img src="../" alt="Email">
+                        <p class="e_d"><strong>Email Us</strong> for inquiries and support</p>
+                    </a>
+                </div>
+            
+                <div class="contact-method">
+                    <a href="tel:+919113599022">
+                        <img src="phonelogo.jpg" alt="Phone">
+                        <p ><strong>Call Us</strong> during business hours</p>
+                    </a>
+                </div>
+            
+                <div class="contact-method">
+                    <a href="https://www.google.com/maps/place/Indian+Institute+of+Information+Technology+(IIIT),+Dharwad/@15.3893387,75.026765,16.5z/data=!4m14!1m7!3m6!1s0x3bb8d3a4bc7f5c91:0xf0fc456099430c57!2sIndian+Institute+of+Information+Technology+(IIIT),+Dharwad!8m2!3d15.3926019!4d75.0252704!16s%2Fg%2F11bwgvgs24!3m5!1s0x3bb8d3a4bc7f5c91:0xf0fc456099430c57!8m2!3d15.3926019!4d75.0252704!16s%2Fg%2F11bwgvgs24?entry=ttu">
+                        <img src="visitus.png" alt="Location">
+                        <p><strong>Visit Us</strong> at our office</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

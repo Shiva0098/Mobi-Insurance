@@ -8,35 +8,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
-    <style>
-        *{
-            margin: 0;
-            padding: 0;
-        }
+    <style>*{
+        margin: 0;
+        padding: 0;
+    }
 
-        body {
-            background-image: url('image7.jpg');
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            justify-content: center; /* Center horizontally */
-            align-items: center;
-        }
+    body {
+        background-image: url('image7.jpg');
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center; /* Center horizontally */
+        align-items: center;
+    }
 
-        main {
-            width: 100%;
-            margin-top: 50px;
-            flex-grow: 1; /* Expand to fill remaining vertical space */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 30px;
-        }
+    main {
+        width: 100%;
+        margin-top: 50px;
+        flex-grow: 1; /* Expand to fill remaining vertical space */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 30px;
+    }
 
-
-    </style>
+</style>
+    
 </head>
 <body>
     <header>
@@ -89,7 +88,7 @@
             </tbody>
         </table>
 
-        <form action="" class="app-form" id="applicationForm" style="padding: 20px;">
+        <form action="" class="app-form" id="applicationForm">
             <h2>Application Form</h2>
             <div>
                 <label for="product-id">Product ID:</label>
@@ -99,7 +98,7 @@
                 <label for="coverage-lvl">Coverage Level:</label>
                 <select name="coverage-lvl:" id="coverageLevel">
                     <option value="High">High</option>
-                    <option value="Med">Medium</option>
+                    <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
                 </select>
             </div>
@@ -126,7 +125,7 @@
                 });
 
                 try {
-                    const response = await fetch('/register-app', {
+                    const response = await fetch('/register-app-renew', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -138,7 +137,7 @@
                         const result = await response.json();
                         
                         alert('Application submitted successfully!');
-                        window.location.href = "/nok.html";
+                        window.location.href = "/payment_gateway.html";
                     } else {
                         throw new Error('Failed to submit application');
                     }

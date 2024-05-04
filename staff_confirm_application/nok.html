@@ -8,6 +8,34 @@
     <title>Register NOK</title>
 
     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+
+        
         .l_c {
             color: white;
             margin-right: 10px;
@@ -33,43 +61,43 @@
     <header>
         <div class="navbar">
             <div class="icon">
-                <h2 class="logo">Logo</h2>
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
             </div>
+
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICES</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
+                <button class="logout">Log Out</button>
             </div>
         </div> 
     </header>
 
+
     <main>
-        <div class="search">
-            <input class="srch" type="search" name="" placeholder="Search Customer">
-            <a href="#"> <button class="btn">Search</button></a>
-        </div>
 
         <div class="nok_form">
             <form id="nok-form"> <!-- Form for Registering NOK -->
-                <label class="l_c">NOK Name:</label>
+                <label class="l_c">Nominee Name:</label>
                 <input type="text" id="nok-name" name="Nok_Name" required>
                 <br><br><br>
-                <label class="l_c">NOK Address:</label>
+                <label class="l_c">Nominee Address:</label>
                 <input type="text" id="nok-address" name="Nok_Address" required>
                 <br><br><br>
-                <label class="l_c">NOK Phone Number:</label>
+                <label class="l_c">Nominee Phone Number:</label>
                 <input type="text" id="nok-phone" name="Nok_Phone_Number" required>
                 <br><br><br>
-                <label class="l_c">NOK Marital Status:</label>
+                <label class="l_c">Nominee Marital Status:</label>
                 <select id="marital-status" name="Nok_Marital_Status" required>
                     <option value="Married">Married</option>
-                    <option value="Unmarried">Unmarried</option>
+                    <option value="Single">Unmarried</option>
                 </select>
                 <br><br><br>
-                <label class="l_c">NOK Gender:</label>
+                <label class="l_c">Nominee Gender:</label>
                 <select id="gender" name="Nok_Gender" required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -102,13 +130,14 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Error registering NOK: ${response.status} ${response.statusText}`);
+                    throw new Error(`Error registering Nominee: ${response.status} ${response.statusText}`);
                 }
 
-                alert('NOK registered successfully!'); // Success message
+                alert('Nominee registered successfully!');
+                window.location.href =  "payment_gateway.html";// Success message
             } catch (error) {
-                console.error("Error registering NOK:", error); // Log the error
-                alert("An error occurred while registering NOK. Please try again later."); // Error message
+                console.error("Error registering Nominee:", error); // Log the error
+                alert("An error occurred while registering Nominee. Please try again later."); // Error message
             }
         });
     </script>

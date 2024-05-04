@@ -5,20 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application Details</title>
+
+    <style>
+        .app_form{
+            padding:0px;
+            margin-top: 100px;
+            justify-self: center;
+            align-self: center;
+            
+        }
+
+        main{
+
+            margin-top: 100px;
+        }
+
+        #submit-btn{
+            font-size: small;
+            background-color: rgb(102, 249, 44);
+            padding:5px;
+            /* border: 2px solid black */
+            border-radius: 7px;
+        }
+           </style>
     
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="icon">
-                <h2 class="logo">Logo</h2>
+                <h2 class="logo">Mobi</h2>
             </div>
 
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="services.html">SERVICE</a></li>    
                     <li><a href="#">CONTACT</a></li>
                 </ul>
                 <button class="logout">Log Out</button>
@@ -30,8 +53,8 @@
         <form action="" class="app-form" id="applicationForm">
             <h2>Claim Application</h2>
             <div>
-                <label for="claim-amount">Claim Amount:</label> <!-- Changed from Product ID -->
-                <input id="claimAmount" type="number" min="0" step="0.01" required> <!-- Claim amount input -->
+                <label for="claim-amount" >Claim Amount:</label> <!-- Changed from Product ID -->
+                <input id="claimAmount" type="number" min="0" step="0.01" required style="padding: px 10px; margin: 30px 30px 30px 0px;" > <!-- Claim amount input -->
             </div>
             
             <button type="submit" id="submit-btn">Submit</button> <!-- Submit button -->
@@ -48,9 +71,7 @@
                 const claimAmount = document.getElementById('claimAmount').value;
     
                 // Construct the JSON object with the required data
-                const data = {
-                    Claim_Amount: claimAmount
-                };
+                
     
                 try {
                     const response = await fetch('/amount-claim', {
@@ -58,18 +79,20 @@
                         headers: {
                             'Content-Type': 'application/json' // Specify JSON content type
                         },
-                        body: JSON.stringify(data) // Convert the data to JSON within body
+                        body: JSON.stringify({
+                            Claim_Amount: claimAmount
+                        }) // Convert the data to JSON within body
                     });
     
                     if (response.ok) {
                         alert('Claim application submitted successfully!');
-                        window.location.href = "/payment_gateway.html"; // Redirect after success
+                        window.location.href = "/cust_login_home.html"; // Redirect after success
                     } else {
                         throw new Error('Failed to submit claim application'); // If response is not okay
                     }
                 } catch (error) {
                     console.error('Error:', error); // Log the error for debugging
-                    alert('Error submitting claim application'); // User-friendly error message
+                    alert('Error submitting claim application' + error); // User-friendly error message
                 }
             });
         });

@@ -2,60 +2,129 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="cust-vehicles.css">
+    <link rel="stylesheet" href="header.css">
+
     <!-- <link rel="stylesheet" href="../header.css"> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>View Vehicles</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('image7.jpg');
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center; /* Center horizontally */
+            align-items: center;
+        }
+
+        main {
+            width: 100%;
+            margin-top: 50px;
+            flex-grow: 1; /* Expand to fill remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+
+    </style>
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="icon">
                 <!-- <img src ="2.png"class = "companylogo"> -->
-                <h2 class="logo">Logo</h2>
-          </div>
+                <h2 class="logo">Mobi</h2>
+            </div>
 
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
-                    <li><a href="#">SERVICE</a></li>
-                    <li><a href="#">DESIGN</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="services.html">SERVICE</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
+                <button class="logout">Log Out</button>
             </div>
         </div> 
     </header>
 
+
     <main>
+        <h1 style="color: white;">Customer Vehicles</h1>
         <table class="view-vehicle">
             <thead>
-                <th>Vehicle ID</th>
-                <th>Policy ID</th>
-                <th>Registration No.</th>
-                <th>Value</th>
-                <th>Type</th>
-                <th>Size</th>
-                <th>No.of Seats</th>
-                <th>Manufacturer</th>
-                <th>Engine No.</th>
-                <th>Chasis No.</th>
-                <th>Model No.</th>
+                <tr>
+                    <th>Vehicle ID</th>
+                    <th>Registration No.</th>
+                    <th>Value</th>
+                    <th>Type</th>
+                    <th>Manufacturer</th>
+                    <th>Engine No.</th>
+                    <th>Chasis No.</th>
+                    <th>Model No.</th>
+                </tr>
             </thead>
-            <tbody>
-                <!-- <td>1</td>
-                <td>1</td>
-                <td>MH02CH6880</td>
-                <td>80000</td>
-                <td>Car</td>
-                <td>big</td>
-                <td>4</td>
-                <td>Walkswagon</td>
-                <td>qwerty</td>
-                <td>asdfgh</td>
-                <td>12345</td> -->
+            <tbody id="vehicle-tbody">
+                <!-- This is where vehicle data will be inserted -->
             </tbody>
         </table>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const tableBody = document.getElementById('vehicle-tbody'); // Reference to the table body
+
+            try {
+                const response = await fetch('/custvehicle-history', {
+                    method: 'GET', // Specify GET request
+                    headers: {
+                        'Content-Type': 'application/json' // Ensure JSON content type
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch vehicle data: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json(); // Get the JSON data
+                const vehicles = data.data; // Access the 'data' array
+                
+                // Clear existing content to prevent duplicate data
+                tableBody.innerHTML = ''; 
+
+                vehicles.forEach(vehicle => {
+                    const row = `
+                        <tr>
+                            <td>${vehicle.Vehicle_Id}</td>
+                            <td>${vehicle.Vehicle_Registration_Number}</td>
+                            <td>${vehicle.Vehicle_Value}</td>
+                            <td>${vehicle.Vehicle_Type}</td>
+                            <td>${vehicle.Vehicle_Manufacturer}</td>
+                            <td>${vehicle.Vehicle_Engine_Number}</td>
+                            <td>${vehicle.Vehicle_Chasis_Number}</td>
+                            <td>${vehicle.Vehicle_Model_Number}</td>
+                        </tr>
+                    `;
+
+                    tableBody.innerHTML += row; // Append each vehicle row
+                });
+
+            } catch (error) {
+                console.error("Error fetching vehicles:", error); // Log error
+                alert("An error occurred while fetching vehicle data. Please try again later."); // Notify user
+            }
+        });
+    </script>
 </body>
 </html>

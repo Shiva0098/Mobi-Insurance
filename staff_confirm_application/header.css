@@ -1,12 +1,11 @@
 .navbar{
-    width: 100%;
+    width: 1200px;
     height: 75px;
-    margin: auto;
+    display: flex;
 }
 
 .icon{
-    width: fit-content;
-    float: left;
+    width: 200px;
     height: 70px;
 }
 
@@ -21,28 +20,29 @@
 }
 
 .menu{
-    width: fit-content;
-    float: left;
+    width: 400px;
     height: 70px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 ul{
-    float: left;
+    margin-right: auto;
+    justify-self: flex-start;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 40px;
 }
 
 ul li{
     list-style: none;
-    margin-left: 40px;
-    margin-top: 27px;
     font-size: 14px;
 }
 
 ul li a{
     text-decoration: none;
-    border: none;
     color: #fff;
     font-family: Arial;
     font-weight: bold;
@@ -51,4 +51,20 @@ ul li a{
 
 ul li a:hover{
     color: #ff7200;
+}
+
+.menu button {
+    align-self: center;
+    background-color: transparent;
+    border: 2px solid #ff7200;
+    border-radius: 5px;
+    color: white;
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+.menu button:hover {
+    color: black;
+    background-color: #ff7200;
 }

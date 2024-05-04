@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="header.css">
+    <!-- <link rel="stylesheet" href="header.css"> -->
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="header.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Receipt</title>
     <style>
@@ -26,7 +28,8 @@
             justify-content: space-between; /* Space out menu items */
             align-items: center; /* Align items vertically */
             padding: 10px 20px;
-            background-color: #333; /* Dark background */
+            backdrop-filter: blur(40px);
+            /* background-color: #333; Dark background */
             color: white; /* White text */
         }
 
@@ -38,8 +41,10 @@
 
         .navbar .menu a {
             text-decoration: none; /* Remove underlines */
+            font-weight: bold;
             color: white; /* White text */
-            transition: color 0.3s; /* Smooth hover transition */
+            margin-right: 50px;
+            transition: color 0.1s; /* Smooth hover transition */
         }
 
         .navbar .menu a:hover {
@@ -48,23 +53,27 @@
 
         .logout {
             background: none; /* Transparent background */
-            border: none; /* No border */
+            border: 2px solid #ff7200; /* No border */
             color: white; /* White text */
             cursor: pointer; /* Pointer cursor */
             font-size: 1em; /* Standard font size */
             padding: 10px; /* Padding for spacing */
+            border-radius: 7px;
         }
 
         .gen {
             border: 2px solid #ff7200;
-            border-radius: 15px;
+            border-radius: 15px;    
             padding: 20px;
             background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
             color: white;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
             width: 60%; /* Limit width */
             text-align: center; /* Center-align the text */
-            margin-top: 20px; /* Space from the top */
+            margin-top: 120px; /* Space from the top */
+            margin-left: 415px;
+            max-width: 700px;
+
         }
 
         .data {
@@ -80,11 +89,21 @@
 
         .data-title {
             font-weight: bold; /* Bold text */
-            color: #ff7200; /* Orange color for titles */
+            color: white; /* Orange color for titles */
         }
 
         .receipt-value {
             color: white; /* White text for data */
+        }
+
+        .logo{
+            font-size: xx-large;
+            color: #ff7200;
+        }
+
+        .button_c{
+            margin-top: 70px;
+            margin-left: 700px;
         }
     </style>
 </head>
@@ -97,13 +116,14 @@
 
             <div class="menu">
                 <ul>
-                    <li><a href="#">HOME</a></li>
+                    <li><a href="cust_login_home.html">HOME</a></li>
                     <li><a href="#">ABOUT</a></li>
                     <li><a href="services.html">SERVICE</a></li>
-                    <li><a href="#">CONTACT</a></li>
+                    <li><a href="contact.html">CONTACT</a></li>
                 </ul>
-                <button class="logout">Log Out</button> <!-- Log Out button aligned to the rightmost -->
+               
             </div>
+            <button class="logout">Log Out</button> <!-- Log Out button aligned to the rightmost -->
         </div>
     </header>
 
@@ -130,8 +150,26 @@
                 <div class="receipt-value" id="data-4"></div> <!-- Placeholder for date -->
             </div>
         </div>
+
+        <div class="button_c">
+            <!-- Your existing receipt content here -->
+            <button id="printButton" class="logout" onclick="printReceipt()">Print Receipt</button>
+        </div>
+
+
+
     </main>
     <script>
+
+function printReceipt() {
+            // Hide the print button before printing
+            document.getElementById('printButton').style.display = 'none';
+            // Print the receipt
+            window.print();
+            // Show the print button again after printing is done
+            document.getElementById('printButton').style.display = 'block';
+        }
+
         // Ensure the DOM is fully loaded before running the script
         document.addEventListener("DOMContentLoaded", function() {
             // Fetch the data from the endpoint

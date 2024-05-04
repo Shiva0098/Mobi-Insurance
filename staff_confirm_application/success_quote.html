@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="header.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Quote</title>
+    <!-- Styles here -->
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('image7.jpg');
+    background-size: cover;
+}
+
+body {
+    background-image: url('image7.jpg');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center; /* Center horizontally */
+    align-items: center;
+}
+.navbar{
+width: 1200px;
+height: 75px;
+display: flex;
+}
+
+.icon{
+width: 200px;
+height: 70px;
+}
+
+.logo{
+color: #ff7200;
+font-size: 35px;
+font-family: Arial;
+padding-left: 20px;
+float: left;
+padding-top: 10px;
+margin-top: 5px
+}
+
+.menu{
+width: 400px;
+height: 70px;
+flex-grow: 1;
+display: flex;
+justify-content: flex-end;
+}
+
+ul{
+margin-right: auto;
+justify-self: flex-start;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 40px;
+}
+
+ul li{
+list-style: none;
+font-size: 14px;
+}
+
+ul li a{
+text-decoration: none;
+color: #fff;
+font-family: Arial;
+font-weight: bold;
+transition: 0.4s ease-in-out;
+}
+
+ul li a:hover{
+color: #ff7200;
+}
+
+.menu button {
+align-self: center;
+background-color: transparent;
+border: 2px solid #ff7200;
+border-radius: 5px;
+color: white;
+width: 80px;
+height: 40px;
+cursor: pointer;
+transition: all ease 0.3s;
+}
+.menu button:hover {
+color: black;
+background-color: #ff7200;
+}
+.gen {
+    margin-top: 100px;
+    border: 2px solid #ff7200;
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}  
+.gen h2 {
+    color: #ff7200;
+    text-align: center;
+}
+.data {
+    padding: 10px;
+} 
+.data div {
+    display: inline-block;
+    padding: 5px;
+}
+.desc {
+    padding: 20px;
+    margin-right: 10px;
+}
+
+.button_a{
+
+    color: black;
+    font-weight: bold;
+    background-color: white;
+    padding: 10px;
+    text-decoration: none;
+    border: 3px solid #ff7200;
+    border-radius: 7px;
+}
+
+.button_c{
+    margin-top: 50px;
+}
+
+</style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="icon">
+                <!-- <img src ="2.png"class = "companylogo"> -->
+                <h2 class="logo">Mobi</h2>
+            </div>
+
+            <div class="menu">
+                <ul>
+                    <li><a href="#">HOME</a></li>
+                    <li><a href="#">ABOUT</a></li>
+                    <li><a href="#">SERVICE</a></li>
+                    <li><a href="#">DESIGN</a></li>
+                    <li><a href="#">CONTACT</a></li>
+                </ul>
+                <button class="logout">Log Out</button>
+            </div>
+        </div> 
+    </header>
+
+    <div class="gen">
+        <h2>Quote</h2>
+        <div class="data">
+            <div>Quote ID: </div>
+            <div id="quoteId"></div>
+        </div>
+        <div class="data">
+            <div>Customer ID: </div>
+            <div id="customerId"></div>
+        </div>
+        <div class="data">
+            <div>Issue Date: </div>
+            <div id="issueDate"></div>
+        </div>
+        <div class="data">
+            <div>Validity: </div>
+            <div>From</div>
+            <div id="validFromDate"></div>
+            <div>to</div>
+            <div id="validToDate"></div>
+        </div>
+        <div class="data">
+            <div>Description: </div>
+            <div id="description"></div>
+        </div>
+        <div class="data">
+            <div>Product ID: </div>
+            <div id="productId"></div>
+        </div>
+        <div class="data">
+            <div>Coverage Level: </div>
+            <div id="coverageLevel"></div>
+        </div>
+        <div class="data">
+            <div>Coverage Amount: </div>
+            <div id="coverageAmount"></div>
+        </div>
+    </div>
+
+    <div class="button_c">
+    <a href="show_application.html" class="button_a">Application</a> <a href="show_quote.html" class="button_a">Create new quote</a>
+    </div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    fetch('/success_quote')  // Adjust the API endpoint as necessary
+        .then(response => response.json())
+        .then(datas => {
+                const data = datas.data[0];// Update elements with the data received
+            document.getElementById('quoteId').innerText = data.Quote_Id;
+            document.getElementById('customerId').innerText = data.Cust_Id;
+            document.getElementById('issueDate').innerText = data.Issue_Date;
+            document.getElementById('validFromDate').innerText = data.Valid_From_Date;
+            document.getElementById('validToDate').innerText = data.Valid_Till_Date;
+            document.getElementById('description').innerText = data.Description;
+            document.getElementById('productId').innerText = data.Product_Id;
+            document.getElementById('coverageLevel').innerText = data.Coverage_Level;
+            document.getElementById('coverageAmount').innerText = data.Coverage_Amount;
+
+            alert("Quote Created Successfully!");
+            
+        })
+        .catch(error => {
+            console.error('Error fetching data: ', error);
+            // Handle errors here
+        });
+});
+
+    </script>
+</body>
+</html>
